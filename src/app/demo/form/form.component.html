@@ -1,0 +1,23 @@
+<div class="container">
+    <dynamic-form [controls]="controls" [form]="form"></dynamic-form>
+    <p-button label="Submit" (onClick)="onSubmit()" />
+  </div>
+  
+  <ng-template #passwordFooter>
+    <p class="mt-2">Suggestions</p>
+    <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+      <li>At least one lowercase</li>
+      <li>At least one uppercase</li>
+      <li>At least one numeric</li>
+      <li>Minimum 8 characters</li>
+    </ul>
+  </ng-template>
+  
+  <ng-template #passwordHeader>
+    <h3>Pick a password</h3>
+  </ng-template>
+  
+  <ng-template let-item #selectButtonTemplate>
+    <i [class]="item.iicon"></i>
+  </ng-template>
+  

@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/scss/bootstrap-grid";
+@import "bootstrap/scss/bootstrap-utilities";
+@import "bootstrap/scss/forms";
+
+// qill css for editor
+@import "quill/dist/quill.core.css";
+@import "quill/dist/quill.snow.css";
+
+// prime css
+@import "primeicons/primeicons.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
+// import spacing custom
+// @import "scss/spacing";
+
+// import font size custom
+@import "scss/font-size";
+
+// import table custom
+@import "scss/table";
+
+// dialog custom
+.p-dialog-custom {
+    .p-dialog-content {
+        padding: 0;
+    }
+
+    .p-dialog-_content {
+        padding: 0 1.5rem 2rem 1.5rem;
+    }
+}
+
+.p-dialog-footer, .p-dialog-header {
+    background-color: var(--primary-50, #dee1e6);
+    padding: 1rem 1.5rem;
+}
+
+.ng-invalid .invalid-feedback {
+    display: block;
+}
+
+html {
+    font-size: 13px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}

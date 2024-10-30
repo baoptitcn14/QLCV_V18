@@ -1,0 +1,33 @@
+table {
+
+    &.dashed {
+        tbody {
+            tr {
+                td {
+                    border-style: dashed !important;
+                }
+            }
+            tr:nth-child(5n) {
+                td {
+                    border-bottom-style: solid !important;
+                    border-bottom-color: #ccc !important;
+                }
+            }
+        }
+    }
+
+    &.middle {
+        tr {
+            th, td {
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+.p-treetable {
+    .p-treetable-header {
+        border: none;
+        background: none;
+    }
+} 
