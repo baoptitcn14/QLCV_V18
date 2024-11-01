@@ -49,3 +49,60 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.input-base {
+    width: 100%;
+    height: 25px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3); /* Đường viền bình thường */
+}
+
+.search-input {
+    border: none;
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
+/* Đường viền focus chạy từ giữa ra */
+.input-base::after {
+    content: "";
+    position: absolute;
+    left: 50%; /* Bắt đầu từ giữa */
+    bottom: -2px; /* Đặt ngay dưới viền mặc định */
+    height: 2px;
+    width: 0; /* Bắt đầu với độ rộng 0 */
+    background-color: #22c55e; /* Màu gạch chân khi focus */
+    transition: width 0.2s ease, left 0.2s ease; /* Hiệu ứng chuyển động */
+    transform: translateX(-50%); /* Để giữ đường viền ở giữa */
+}
+
+/* Mở rộng đường viền khi input bên trong container được focus */
+.input-base:focus-within::after {
+    width: 100%; /* Mở rộng từ giữa ra */
+}
+
+/* Đường viền thu lại đồng đều khi không focus */
+.input-base:not(:focus-within)::after {
+    width: 0; /* Thu lại về kích thước 0 */
+    left: 50%; /* Giữ đường viền ở giữa khi thu lại */
+    transform: translateX(-50%); /* Để giữ đường viền ở giữa */
+}
+.btn{
+    background: unset;
+    border: unset;
+    color: black;
+    min-width: 80px;
+    min-height: 25px;
+}
+.btn-light{
+    color: black;
+}
+.p-button:focus {
+    outline: none !important;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border: none;
+} 

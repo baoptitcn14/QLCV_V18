@@ -1,1 +1,73 @@
-<p>dashboard works!</p>
+<!-- app-tool-bar -->
+
+<div class="dashboard">
+  <div class="dashboard-header">
+    <ul class="dashboard-menu">
+      <li class="dashboard-menu__item active">
+        <i class="fas fa-home"></i> Công việc
+      </li>
+      <li class="dashboard-menu__item">
+        <i class="fas fa-database"></i> Dữ liệu
+      </li>
+      <li class="dashboard-menu__item">
+        <i class="fas fa-search"></i> Tra cứu
+      </li>
+      <li class="dashboard-menu__item">
+        <i class="fas fa-cogs"></i> Cấu hình
+      </li>
+      <li class="dashboard-menu__item">
+        <i class="fas fa-list"></i> Quản lý danh mục
+      </li>
+      <li class="dashboard-menu__item">
+        <i class="fas fa-plus-circle"></i> Tạo mới
+      </li>
+      <li class="dashboard-menu__item">
+        <i class="fas fa-tools"></i> Hỗ trợ sửa lỗi
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="dashboard-table">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="w-50">
+          <div class="dashboard-search">
+            <div class="input-base input-search__dashboard">
+              <i class="fa fa-search"></i>
+              <input type="text" class="search-input" pInputText placeholder="Tìm kiếm công việc ...." />
+            </div>
+            <p-dropdown class="btn-lv" [options]="listLevel" [(ngModel)]="selectedCity" optionLabel="name" placeholder="0" />
+            <p-dropdown class="btn-view-lv" [options]=" listViewLevel" optionLabel="name" placeholder="Xem đến 0 bậc" />
+            <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" [raised]="true" />
+          </div>
+        </th>
+        <th scope="col">
+          <p-splitButton label="0" [model]="items" severity="secondary" text class="btn-white" raised  placeholder="0"></p-splitButton>
+
+        </th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>mdo</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>fat</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td colspan="2">Larry the Bird</td>
+        <td>twitter</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
