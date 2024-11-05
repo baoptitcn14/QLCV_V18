@@ -1,3 +1,11 @@
+
+@for $i from 1 through 100 {
+    .th-#{$i} {
+        width: calc(#{$i} * 1%);
+    }
+}
+
+
 table {
 
     &.dashed {
