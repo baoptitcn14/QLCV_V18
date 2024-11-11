@@ -1,7 +1,6 @@
 
 .dashboard{
     width: 100%;
-
     background-color: #444d58;
 }
 .dashboard-header{
@@ -56,8 +55,7 @@
     font-size: 1rem;
     color: #c5cdda;
     margin-top: 3px;
-    font-size: 15px;
-    
+    font-size: 15px; 
 }
 .input-search__dashboard >i ::before{
  margin-top: 3px;
@@ -83,4 +81,49 @@
 // 
 .btn-white{
     background: white;
+}
+.dashboard-table > tbody > tr {
+    background: #f0faff
+}
+.td-work{
+    height: 30px;
+    // background: #e0fcff
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    width: 100%;
+    justify-content: space-between;
+}
+.ml-5{
+ margin-left: 5px;
+}
+.btn{
+    height: 25px;
+    cursor: pointer;
+    
+}
+.btn-work__count{
+    min-width: 20px 
+}
+.btn-orange{
+    background-color: #e87e04;
+    color: white;
+    border-radius: 3px;
+}
+.btn-green {
+    background-color: #36bd84;
+    color: white;
+    border-radius: 3px;
+}
+.btn-blue{
+    background-color: #217ebd;
+    color: white;
+    border-radius: 3px;
+}  
+.btn-work__report{
+    width: 150px;
+}
+.btn-work__mission{
+    width: 100px
 }
