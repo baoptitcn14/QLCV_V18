@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { DashboardContentComponent } from "./partials/dashboard-content/dashboard-content.component";
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -13,8 +14,9 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     DropdownModule,
     FormsModule,
     ButtonModule,
-    SplitButtonModule
-  ],  
+    SplitButtonModule,
+    DashboardContentComponent
+],  
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
