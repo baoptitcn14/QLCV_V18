@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { SupportService } from './support.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor() {}
+  constructor(
+    private readonly _spService:SupportService
+  ) {}
 
   maxResultCount = 30;
 
@@ -95,10 +98,10 @@ export class DashboardService {
       _isShow: false,
       _isHidden: true,
       luaChon: luachon.LUA_CHON,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
       actionTemplate: null,
-      listData: structuredClone(this.listData),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
     {
@@ -107,9 +110,9 @@ export class DashboardService {
       type: 'post',
       _isShow: false,
       _isHidden: true,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
-      listData: structuredClone(this.listData),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
     {
@@ -119,10 +122,10 @@ export class DashboardService {
       _isShow: false,
       _isHidden: true,
       allowSelectChild: false,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
       actionTemplate: null,
-      listData: structuredClone(this.listData),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
     {
@@ -137,10 +140,10 @@ export class DashboardService {
       },
       luaChon: luachon.TAT_CA,
       duyetNhanh: false,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
       actionTemplate: null,
-      listData: structuredClone(this.listData),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
     {
@@ -155,10 +158,10 @@ export class DashboardService {
       },
       luaChon: luachon.TAT_CA,
       duyetNhanh: false,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
       actionTemplate: null,
-      listData: structuredClone(this.listData),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
     {
@@ -174,10 +177,10 @@ export class DashboardService {
       luaChon: luachon.TAT_CA,
       duyetNhanh: true,
       allowSelectChild: false,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
       actionTemplate: null,
-      listData: structuredClone(this.listData),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
     {
@@ -187,47 +190,113 @@ export class DashboardService {
       _isShow: false,
       _isHidden: true,
       allowSelectChild: false,
-      viewDate: structuredClone(this.viewDate),
-      paged: structuredClone(this.paged),
+      viewDate: this._spService.cloneDeep(this.viewDate),
+      paged: this._spService.cloneDeep(this.paged),
       actionTemplate: null,
-      listData: structuredClone(this.listData),
+      listData: this._spService.cloneDeep(this.listData),
       listDisplay: [],
     },
   ];
-  cloneDeep(obj: any, seen = new WeakMap()): any {
-    if (obj === null || typeof obj !== 'object') return obj;
-  
-    if (seen.has(obj)) {
-      return seen.get(obj); // Trả về giá trị đã clone trước đó
-    }
-  
-    let clonedObj: any;
-    if (obj instanceof Date) {
-      clonedObj = new Date(obj);
-    } else if (obj instanceof Map) {
-      clonedObj = new Map();
-      obj.forEach((value, key) => {
-        clonedObj.set(key, this.cloneDeep(value, seen));
-      });
-    } else if (obj instanceof Set) {
-      clonedObj = new Set();
-      obj.forEach(value => {
-        clonedObj.add(this.cloneDeep(value, seen));
-      });
-    } else if (Array.isArray(obj)) {
-      clonedObj = obj.map(item => this.cloneDeep(item, seen));
-    } else {
-      clonedObj = {};
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          clonedObj[key] = this.cloneDeep(obj[key], seen);
-        }
-      }
-    }
-  
-    seen.set(obj, clonedObj); // Lưu đối tượng đã clone
-    return clonedObj;
+
+  buildGroup(listGroup:any ,actionViecCanLamTemplate:any, actionBaoCaoNhanhTemplate:any,  actionViecThayDoiLienQuanTemplate?:any, actionViecBaoCaoChoDuyetTemplate?:any) {
+    listGroup[0].actionTemplate = actionViecCanLamTemplate;
+    listGroup[1].actionTemplate = actionBaoCaoNhanhTemplate;
+    listGroup[2].actionTemplate = actionViecThayDoiLienQuanTemplate;
+    listGroup[5].actionTemplate = actionViecBaoCaoChoDuyetTemplate;
+    listGroup[6].actionTemplate = actionViecBaoCaoChoDuyetTemplate;
+    listGroup[7].actionTemplate = actionViecBaoCaoChoDuyetTemplate;
+
+    listGroup[0].viewDate.class.default = 'lbl-view-date-viec-can-lam defaultBtn';
+    listGroup[1].viewDate.class.default = 'lbl-view-date-viec-tre-han defaultBtn';
+    listGroup[2].viewDate.class.default = 'lbl-view-date-viec-moi-thay-doi-lien-quan defaultBtn';
+    listGroup[3].viewDate.class.default = 'green-jungle defaultBtn';
+    listGroup[4].viewDate.class.default = 'lbl-view-date-viec-bao-cao-cho-duyet defaultBtn';
+    listGroup[5].viewDate.class.default = 'lbl-view-date-viec-bao-cao-cho-duyet defaultBtn';
+    listGroup[6].viewDate.class.default = 'lbl-view-date-viec-bao-cao-cho-duyet defaultBtn';
+    listGroup[7].viewDate.class.default = 'lbl-view-date-viec-bao-cao-cho-duyet defaultBtn';
+    listGroup[8].viewDate.class.default = 'lbl-view-date-viec-bao-cao-cho-duyet defaultBtn';
+
+
+    listGroup[0].viewDate.class.active = 'strong-blue activebtn';
+    listGroup[1].viewDate.class.active = 'btn-danger activebtn';
+    listGroup[2].viewDate.class.active = 'btn-light-blue activebtn';
+    listGroup[3].viewDate.class.active = 'strong-blue activebtn';
+    listGroup[4].viewDate.class.active = 'strong-blue activebtn';
+    listGroup[5].viewDate.class.active = 'strong-blue activebtn';
+    listGroup[6].viewDate.class.active = 'strong-blue activebtn';
+    listGroup[7].viewDate.class.active = 'strong-blue  activebtn';
+    listGroup[8].viewDate.class.active = 'strong-blue  activebtn';
+
   }
+  setupData(listGroup:any, res:any, config:any) {
+    // _.each(this.orderGroup, (item, index) => {
+    //   _.each(res[item], itemRes => {
+    //     itemRes._orderNew = 1;
+    //   })
+    //   var setupDateTime = this._datetimeService.convertDateToLong(this.datime);
+    //   if (item == 'viecMoiChoDuyets') {
+    //     var txt = 'viecBaoCaoChoDuyets';
+
+    //     var data = _.cloneDeep(this.sorting(res[txt], config.listSorting));
+    //     var listData: any[] = [];
+    //     data.forEach((item:any) => {
+    //       if (item.action != "PAUSETODO" && item.action != "RESTARTTODO") {
+    //         listData.push(item);
+    //       }
+    //     });
+
+    //     this.setupItem(listGroup[index], listData);
+    //   } else {
+    //     if (item == 'thongBaoMois') {
+    //       var listData = []
+    //       res[item] = this.sorting(res[item], config.listSorting);
+    //       var listValue = _.filter(res[item], { 'bool1': true });
+   
+    //       listData = _.cloneDeep(_.filter(res[item], (o) => o.bool1 == false || o.bool1 == null));
+
+    //       if (listValue.length > 0) {
+    //         listValue.forEach(item => {
+    //           if (item.hanHoanThanh < setupDateTime!) {
+    //             // this._thongBaoServiceProxy.anThongBao(new GuidEntityDto({
+    //             //   id: item.id
+    //             // }))
+    //           }
+    //           else {
+    //             listData.push(item);
+    //           }
+    //         })
+    //       }
+    //       this.setupItem(listGroup[index], listData);
+
+    //     }
+    //     else if (item == 'viecTamDungKhoiDongChoDuyets') {
+    //       var txt = 'viecBaoCaoChoDuyets';
+
+    //       var data = _.cloneDeep(this.sorting(res[txt], config.listSorting));
+
+    //       var listData: any[] = [];
+    //       data.forEach((item:any) => {
+    //         if (item.action == "PAUSETODO" || item.action == "RESTARTTODO") {
+    //           listData.push(item);
+    //         }
+    //       });
+
+    //       this.setupItem(listGroup[index], listData);
+    //     }
+    //     else {
+    //       res[item] = this.sorting(res[item], config.listSorting);
+    //       this.setupItem(listGroup[index], res[item]);
+    //     }
+    //   }
+
+
+
+    //   this.resetPage(listGroup[index]);
+
+    //   listGroup[index].listDisplay = this.takeDataDefault(listGroup[index]);
+    // })
+  }
+
 }
 enum TaskType {
   DANG_LAM = 'DANG_LAM',

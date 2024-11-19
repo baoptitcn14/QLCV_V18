@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { DashboardContentComponent } from "./partials/dashboard-content/dashboard-content.component";
+import { DashboardHeaderComponent } from "./partials/dashboard-header/dashboard-header.component";
+import { SettingDto } from '../shared/service-proxies/qlcv-service-proxies';
+import { DashboardService, DashboardConst } from '../shared/services/dashboard.service';
+import { SupportService } from '../shared/services/support.service';
+import { SettingService } from '../shared/services/setting.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -15,42 +19,55 @@ import { DashboardContentComponent } from "./partials/dashboard-content/dashboar
     FormsModule,
     ButtonModule,
     SplitButtonModule,
-    DashboardContentComponent
+    DashboardContentComponent,
+    DashboardHeaderComponent
 ],  
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-  listLevel: any[] = [
-    { name: '0', code: 'NY' },
-    { name: '1', code: 'NY' },
-    { name: '2', code: 'RM' },
-    { name: '3', code: 'LDN' },
-    { name: '4', code: 'IST' },
-    { name: '5', code: 'PRS' }
-  ]; 
-  listViewLevel: any[] = [
-    { name: 'Xem đến bậc 0', code: '1' },
-    { name: 'Xem đến bậc 1', code: '1' },
-    { name: 'Xem đến bậc 2', code: '2' },
-    { name: 'Xem đến bậc 3', code: '3' },
-    { name: 'Xem đến bậc 4', code: '4' },
-    { name: 'Xem đến bậc 5', code: '5' }
-  ] ;
-  items:any = [
-    { label: 'Update', icon: 'pi pi-refresh', command: () => { this.update(); } },
-    { label: 'Delete', icon: 'pi pi-times', command: () => { this.delete(); } },
-    { label: 'Angular.io', icon: 'pi pi-external-link', url: 'http://angular.io' },
-    { label: 'Router', icon: 'pi pi-upload', routerLink: ['/fileupload'] }
-  ];
-  selectedCity: any | undefined;
+export class DashboardComponent implements OnInit , AfterViewInit{
 
-  ngOnInit() {
+  @ViewChild('actionViecCanLamTemplate') actionViecCanLamTemplate!: TemplateRef<any>;
+  @ViewChild('actionBaoCaoNhanhTemplate') actionBaoCaoNhanhTemplate!: TemplateRef<any>;
+  @ViewChild('actionViecThayDoiLienQuanTemplate') actionViecThayDoiLienQuanTemplate!: TemplateRef<any>;
+  @ViewChild('actionViecBaoCaoChoDuyetTemplate') actionViecBaoCaoChoDuyetTemplate!: TemplateRef<any>;
+
+
+  listGroup:any = [];
+  listExclude = ['/app/management/dashboard/task', '/app/management/dashboard/post', '/app/management/dashboard/data', '/app/management/dashboard/transfer'];
+  setting:any;
+  constructor(
+    private readonly _dashboardService:DashboardService,
+    private readonly _spService:SupportService,
+    private readonly _settingService:SettingService
+  ){}
+  ngOnInit():void {
+    this.setting = this._settingService.getSettingViewTaskDashboard();
   }
-  update(){
-
+  ngAfterViewInit(): void {
+    this._dashboardService.buildGroup(this.listGroup, this.actionViecCanLamTemplate, this.actionBaoCaoNhanhTemplate,this.actionViecThayDoiLienQuanTemplate,this.actionViecBaoCaoChoDuyetTemplate);
+    
   }
-  delete(){
-
+  onReload(){
+    this.setupDataDashboard();
+  }
+  setupDataDashboard(data?:any) {
+    let index = this.listGroup.findIndex((f:any) => f.key == DashboardConst.viecCanLams);
+    this.listGroup[index]._isNhiemVu = false;
+    this.listGroup[index]._isLoadNhiemVu = false;
+    if (this.setting.value.autoSave) {
+      var input =  this._spService.cloneDeep(this.setting);
+      input.value = JSON.stringify(this.setting.value);
+      input = SettingDto.fromJS(input);
+      // this._settingServce.update(input).subscribe(res => {
+      //   console.log('LUU CAU HINH THANH CONG');
+      // })
+    }
+    // $('#dashboard').scrollTop(0);
+    // $('#dashboard-table').scrollTop(0);
+    var test = this._spService.getDataTest()
+    this._dashboardService.setupData(this.listGroup,test,this.setting.value)
+    console.log(this.listGroup)
+     
   }
 }
