@@ -25,12 +25,9 @@ import { SettingService } from '../shared/services/setting.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit , AfterViewInit{
+export class DashboardComponent implements OnInit {
 
-  @ViewChild('actionViecCanLamTemplate') actionViecCanLamTemplate!: TemplateRef<any>;
-  @ViewChild('actionBaoCaoNhanhTemplate') actionBaoCaoNhanhTemplate!: TemplateRef<any>;
-  @ViewChild('actionViecThayDoiLienQuanTemplate') actionViecThayDoiLienQuanTemplate!: TemplateRef<any>;
-  @ViewChild('actionViecBaoCaoChoDuyetTemplate') actionViecBaoCaoChoDuyetTemplate!: TemplateRef<any>;
+
 
 
   listGroup:any = [];
@@ -44,10 +41,7 @@ export class DashboardComponent implements OnInit , AfterViewInit{
   ngOnInit():void {
     this.setting = this._settingService.getSettingViewTaskDashboard();
   }
-  ngAfterViewInit(): void {
-    this._dashboardService.buildGroup(this.listGroup, this.actionViecCanLamTemplate, this.actionBaoCaoNhanhTemplate,this.actionViecThayDoiLienQuanTemplate,this.actionViecBaoCaoChoDuyetTemplate);
-    
-  }
+
   onReload(){
     this.setupDataDashboard();
   }

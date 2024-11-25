@@ -1,18 +1,59 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { DashboardConst, DashboardService } from '../../../shared/services/dashboard.service';
+import { SettingService } from '../../../shared/services/setting.service';
+import { SupportService } from '../../../shared/services/support.service';
+import { SettingDto } from '../../../shared/service-proxies/qlcv-service-proxies';
 
 @Component({
   selector: 'app-dashboard-content',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard-content.component.html',
   styleUrl: './dashboard-content.component.scss'
 })
 export class DashboardContentComponent implements OnInit {
 
-  constructor(
-  ){}
-  ngOnInit(): void {
+  @ViewChild('actionFastReportTemplate') actionFastReportTemplate!: TemplateRef<any>;
+  @ViewChild('actionChangeTemplate') actionChangeTemplate!: TemplateRef<any>;
+  @ViewChild('actionApproveTemplate') actionApproveTemplate!: TemplateRef<any>;
 
+  constructor(
+    private readonly _dashboardService:DashboardService,
+    private readonly _spService:SupportService,
+    private readonly _settingService:SettingService
+  ){
+    this.setting = this._settingService.getSettingViewTaskDashboard();
   }
-  
+  setting:any;
+  listGroup:any = [];
+  ngOnInit(): void {
+    this.listGroup = this._dashboardService.listGroup;
+    this.setupDataDashboard();
+  }
+  ngAfterViewInit(): void {
+    this._dashboardService.buildGroup(this.listGroup, this.actionFastReportTemplate,this.actionChangeTemplate,this.actionApproveTemplate)  ; 
+    console.log(this.listGroup)
+  }
+
+  setupDataDashboard(data?:any) {
+    let index = this.listGroup.findIndex((f:any) => f.key == DashboardConst.viecCanLams);
+    this.listGroup[index]._isNhiemVu = false;
+    this.listGroup[index]._isLoadNhiemVu = false;
+    if (this.setting.value.autoSave) {
+      var input =  this._spService.cloneDeep(this.setting);
+      input.value = JSON.stringify(this.setting.value);
+      input = SettingDto.fromJS(input);
+      // this._settingServce.update(input).subscribe(res => {
+      //   console.log('LUU CAU HINH THANH CONG');
+      // })
+    }
+    // $('#dashboard').scrollTop(0);
+    // $('#dashboard-table').scrollTop(0);
+    var test = this._spService.getDataTest()
+    this._dashboardService.setupData(this.listGroup,test,this.setting.value)
+    console.log(this.listGroup)
+     
+  }
 }
+

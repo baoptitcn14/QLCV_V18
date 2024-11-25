@@ -1,20 +1,20 @@
 <tbody>
     <!-- việc cần làm  -->
-    <tr>
+    <tr *ngFor="let group of listGroup  ;let i = index">
         <th scope="row" colspan="2">
             <div class="td-work workToBeDone">
                 <div class="workToBeDone-title">
-                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5"> A. VIỆC CẦN LÀM
+                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5">{{group.title}}
                     </span>
                 </div>
                 <div class="workToBeDone-groupBtn">
-                    <button class="btn btn-orange btn-work__report">
-                        <span class="span-btn-drop"><i aria-hidden="true" class="fa fa-tasks"></i> Báo Cáo Công
-                            Việc </span>
-                    </button>
+                    <ng-container [ngTemplateOutlet]="wordOptions" [ngTemplateOutletContext]="{ group: group }">
+
+                    </ng-container>
                     <button class="btn btn-blue btn-work__count ml-5">
                         <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
                     </button>
+
                 </div>
             </div>
         </th>
@@ -114,9 +114,7 @@
                     </span>
                 </div>
                 <div class="work-groupBtn">
-                    <button class="btn btn-light-blue box-shadown-inner plr-10">
-                        <span class="span-btn-drop">Lựa chọn<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
+
                     <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
                         <span class="span-btn-drop ">30<i class="fa-solid fa-caret-down ml-5"></i></span>
                     </button>
@@ -264,10 +262,7 @@
                     </span>
                 </div>
                 <div class="work-groupBtn">
-                    <button class="btn btn-blue btn-light-green box-shadown-inner plr-10">
-                        <span class="span-btn-drop"><i class="fa-solid fa-rocket"></i>
-                            Duyệt nhanh</span>
-                    </button>
+
                     
                     <button class="btn btn-light-green btn-work__count ml-5">
                         <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
@@ -307,3 +302,44 @@
     </tr>
     <!-- end -->
 </tbody>
+
+
+<ng-template #wordOptions let-group="group">
+    <ng-container [ngTemplateOutlet]="actionFastReportTemplate"
+    [ngTemplateOutletContext]="{ group: group }"></ng-container>
+  </ng-template>
+<!-- ---------------------------------------------Báo Cáo Nhanh ------------------------------------------------------------ -->
+<ng-template #actionFastReportTemplate let-group="group">
+
+    <ng-container *ngIf="group.listDisplay && group.listDisplay.length > 0">
+
+        <button class="btn btn-orange btn-work__report">
+            <span class="span-btn-drop"><i aria-hidden="true" class="fa fa-tasks"></i> Báo Cáo Công
+                Việc </span>
+        </button>
+    </ng-container>
+
+</ng-template>
+<!-- --------------------------------------------- End ------------------------------------------------------------ -->
+
+   <!-- ---------------------------------------------viec thay doi lien quan ------------------------------------------------------------ -->
+   <ng-template #actionChangeTemplate let-group="group">
+        <ng-container>
+            <button class="btn btn-light-blue box-shadown-inner plr-10">
+                <span class="span-btn-drop">Lựa chọn<i class="fa-solid fa-caret-down ml-5"></i></span>
+            </button>
+        </ng-container>
+  </ng-template>
+  <!-- --------------------------------------------- End ------------------------------------------------------------ -->
+
+
+     <!-- ---------------------------------------------viec thay chờ duyệt ------------------------------------------------------------ -->
+  <ng-template #actionApproveTemplate let-group="group">
+    <ng-container>
+        <button class="btn btn-blue btn-light-green box-shadown-inner plr-10">
+            <span class="span-btn-drop"><i class="fa-solid fa-rocket"></i>
+                Duyệt nhanh</span>
+        </button>
+    </ng-container>
+  </ng-template>
+  <!-- ---------------------------------------------end------------------------------------------------------------ -->
