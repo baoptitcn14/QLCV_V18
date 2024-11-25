@@ -2,16 +2,16 @@
     <!-- việc cần làm  -->
     <tr *ngFor="let group of listGroup  ;let i = index">
         <th scope="row" colspan="2">
-            <div class="td-work workToBeDone">
+            <div class="td-work workToBeDone ">
                 <div class="workToBeDone-title">
                     <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5">{{group.title}}
                     </span>
                 </div>
                 <div class="workToBeDone-groupBtn">
-                    <ng-container [ngTemplateOutlet]="wordOptions" [ngTemplateOutletContext]="{ group: group }">
+                    <ng-container [ngTemplateOutlet]="workOptions" [ngTemplateOutletContext]="{ group: group }">
 
                     </ng-container>
-                    <button class="btn btn-blue btn-work__count ml-5">
+                    <button class="btn btn-blue btn-work__count ml-5 box-shadow-inner">
                         <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
                     </button>
 
@@ -42,278 +42,37 @@
 
         </td>
         <td class="text-center">
-            <button class="btn btn-work__mission btn-green ">
+            <button  *ngIf="i == 0" class="btn btn-work__mission btn-green box-shadow-inner">
                 <span class="span-btn-drop">Nhiệm vụ<i class="fa-solid fa-caret-down ml-5"></i></span>
             </button>
         </td>
         <td class="text-center">
-            <button class="btn btn-blue btn-work__mission ">
+            <button  *ngIf="i == 0" class="btn btn-blue btn-work__mission box-shadow-inner">
                 <span class="span-btn-drop">Đang Làm<i class="fa-solid fa-caret-down ml-5"></i></span>
             </button>
         </td>
     </tr>
-    <!-- end -->
-
-    <!-- việc trễ hạn  -->
-    <tr>
-        <th scope="row" colspan="2">
-            <div class="td-work workIncomplete">
-                <div class="workToBeDone-title">
-                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5"> B. VIỆC TRỄ HẠN
-                    </span>
-                </div>
-                <div class="work-groupBtn">
-                    <button class="btn btn-orange btn-work__report box-shadown-inner">
-                        <span class="span-btn-drop"><i aria-hidden="true" class="fa fa-tasks"></i> Báo Cáo Công
-                            Việc </span>
-                    </button>
-                    <button class="btn btn-blue btn-work__count ml-5 box-shadown-inner">
-                        <span class="span-btn-drop ">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                </div>
-            </div>
-        </th>
-        <td class="text-center">
-            <button class="btn btn-red btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-            <button class="btn btn-red btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-            <button class="btn btn-red btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-            <button class="btn btn-red btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-
-        </td>
-        <td class="text-center">
-          
-        </td>
-        <td class="text-center">
-         
-        </td>
-    </tr>
-    <!-- end -->
-
-    <!-- việc mới thay đổi liên quan  -->
-    <tr>
-        <th scope="row" colspan="2">
-            <div class="td-work workIncomplete">
-                <div class="workToBeDone-title">
-                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5"> C.VIỆC MỚI - THAY ĐỔI - LIÊN QUAN
-                    </span>
-                </div>
-                <div class="work-groupBtn">
-
-                    <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                        <span class="span-btn-drop ">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                </div>
-            </div>
-        </th>
-        <td class="text-center">
-            <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-            <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-            <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-            <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button>
-        </td>
-        <td class="text-center">
-
-        </td>
-        <td class="text-center">
-          
-        </td>
-        <td class="text-center">
-         
-        </td>
-    </tr>
-    <!-- end -->
-
-    <!-- Thông báo mới -->
-    <tr>
-        <th scope="row" colspan="2">
-            <div class="td-work workIncomplete">
-                <div class="workToBeDone-title">
-                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5"> D.THÔNG BÁO MỚI
-                    </span>
-                </div>
-                <!-- <div class="work-groupBtn">
-                    <button class="btn btn-light-blue box-shadown-inner plr-10">
-                        <span class="span-btn-drop">Lựa chọn<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                    <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                        <span class="span-btn-drop ">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                </div> -->
-            </div>
-        </th>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-
-        </td>
-        <td class="text-center">
-          
-        </td>
-        <td class="text-center">
-         
-        </td>
-    </tr>
-    <!-- end -->
-
-    <!-- thông báo chờ duyệt  -->
-    <tr>
-        <th scope="row" colspan="2">
-            <div class="td-work workIncomplete">
-                <div class="workToBeDone-title">
-                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5"> D.THÔNG BÁO MỚI
-                    </span>
-                </div>
-                <!-- <div class="work-groupBtn">
-                    <button class="btn btn-light-blue box-shadown-inner plr-10">
-                        <span class="span-btn-drop">Lựa chọn<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                    <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                        <span class="span-btn-drop ">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                </div> -->
-            </div>
-        </th>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-
-        </td>
-        <td class="text-center">
-          
-        </td>
-        <td class="text-center">
-         
-        </td>
-    </tr>
-    <!-- end -->
-
-    <!-- việc mới chờ duyệt  -->
-    <tr>
-        <th scope="row" colspan="2">
-            <div class="td-work workIncomplete">
-                <div class="workToBeDone-title">
-                    <i class="fa-solid fa-caret-right padding-l-5"></i> <span class="ml-5"> F.VIỆC MỚI CHỜ DUYỆT
-                    </span>
-                </div>
-                <div class="work-groupBtn">
-
-                    
-                    <button class="btn btn-light-green btn-work__count ml-5">
-                        <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-                    </button>
-                </div>
-            </div>
-        </th>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-            <!-- <button class="btn btn-light-blue btn-work__count ml-5 box-shadown-inner">
-                <span class="span-btn-drop">30<i class="fa-solid fa-caret-down ml-5"></i></span>
-            </button> -->
-        </td>
-        <td class="text-center">
-
-        </td>
-        <td class="text-center">
-          
-        </td>
-        <td class="text-center">
-         
-        </td>
-    </tr>
-    <!-- end -->
 </tbody>
 
 
-<ng-template #wordOptions let-group="group">
-    <ng-container [ngTemplateOutlet]="actionFastReportTemplate"
-    [ngTemplateOutletContext]="{ group: group }"></ng-container>
+<ng-template #workOptions let-group="group">
+    <ng-container [ngSwitch]="group.actionTemplate">
+
+        <ng-container *ngSwitchCase="'Report'" [ngTemplateOutlet]="actionFastReportTemplate" [ngTemplateOutletContext]="{ group: group }"></ng-container>
+
+        <ng-container *ngSwitchCase="'Change'" [ngTemplateOutlet]="actionChangeTemplate" [ngTemplateOutletContext]="{ group: group }"></ng-container>
+
+        <ng-container *ngSwitchCase="'Approve'" [ngTemplateOutlet]="actionApproveTemplate" [ngTemplateOutletContext]="{ group: group }"></ng-container>
+
+    </ng-container>
+
   </ng-template>
 <!-- ---------------------------------------------Báo Cáo Nhanh ------------------------------------------------------------ -->
 <ng-template #actionFastReportTemplate let-group="group">
 
     <ng-container *ngIf="group.listDisplay && group.listDisplay.length > 0">
 
-        <button class="btn btn-orange btn-work__report">
+        <button class="btn btn-orange btn-work__report box-shadow-inner">
             <span class="span-btn-drop"><i aria-hidden="true" class="fa fa-tasks"></i> Báo Cáo Công
                 Việc </span>
         </button>
@@ -325,8 +84,8 @@
    <!-- ---------------------------------------------viec thay doi lien quan ------------------------------------------------------------ -->
    <ng-template #actionChangeTemplate let-group="group">
         <ng-container>
-            <button class="btn btn-light-blue box-shadown-inner plr-10">
-                <span class="span-btn-drop">Lựa chọn<i class="fa-solid fa-caret-down ml-5"></i></span>
+            <button class="btn btn-light-blue box-shadow-inner plr-10">
+                <span class="span-btn-drop"><i class="fa-regular fa-calendar-check"></i> Lựa chọn<i class="fa-solid fa-caret-down ml-5"></i></span>
             </button>
         </ng-container>
   </ng-template>
@@ -336,7 +95,7 @@
      <!-- ---------------------------------------------viec thay chờ duyệt ------------------------------------------------------------ -->
   <ng-template #actionApproveTemplate let-group="group">
     <ng-container>
-        <button class="btn btn-blue btn-light-green box-shadown-inner plr-10">
+        <button class="btn btn-blue btn-light-green box-shadow-inner plr-10">
             <span class="span-btn-drop"><i class="fa-solid fa-rocket"></i>
                 Duyệt nhanh</span>
         </button>

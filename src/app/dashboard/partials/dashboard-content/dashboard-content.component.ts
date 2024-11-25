@@ -14,26 +14,23 @@ import { SettingDto } from '../../../shared/service-proxies/qlcv-service-proxies
 })
 export class DashboardContentComponent implements OnInit {
 
-  @ViewChild('actionFastReportTemplate') actionFastReportTemplate!: TemplateRef<any>;
-  @ViewChild('actionChangeTemplate') actionChangeTemplate!: TemplateRef<any>;
-  @ViewChild('actionApproveTemplate') actionApproveTemplate!: TemplateRef<any>;
-
   constructor(
     private readonly _dashboardService:DashboardService,
     private readonly _spService:SupportService,
     private readonly _settingService:SettingService
   ){
     this.setting = this._settingService.getSettingViewTaskDashboard();
+    this.listGroup = this._dashboardService.listGroup;
   }
   setting:any;
   listGroup:any = [];
+  actionFastReportTemplate:string = "Report";
+  actionChangeTemplate:string = "Change";
+  actionApproveTemplate:string = "Approve";
+
   ngOnInit(): void {
-    this.listGroup = this._dashboardService.listGroup;
-    this.setupDataDashboard();
-  }
-  ngAfterViewInit(): void {
     this._dashboardService.buildGroup(this.listGroup, this.actionFastReportTemplate,this.actionChangeTemplate,this.actionApproveTemplate)  ; 
-    console.log(this.listGroup)
+    this.setupDataDashboard();
   }
 
   setupDataDashboard(data?:any) {
