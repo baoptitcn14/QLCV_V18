@@ -1,61 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MenuItem, PrimeNGConfig } from 'primeng/api';
-import { MenubarModule } from 'primeng/menubar';
-import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component';
+import { PrimeNGConfig } from 'primeng/api';
 import { TopComponent } from './shared/components/top/top.component';
+import { MenuHorizontalComponent } from './layout/menu-horizontal/menu-horizontal.component';
+import { UserOrgSelectComponent } from './shared/components/user-org-select/user-org-select.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenubarModule, BreadcrumbsComponent, TopComponent],
+  imports: [
+    RouterOutlet,
+    TopComponent,
+    MenuHorizontalComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
   title = 'bs-dynamic-form';
   values: string[] | undefined;
-
-  menus: MenuItem[] = [
-    {
-      label: 'Home',
-      // icon: 'pi pi-home',
-      routerLink: '/home',
-    },
-    {
-      label: 'Demo',
-      // icon: 'pi pi-search',
-      items: [
-        {
-          label: 'Form',
-          // icon: 'pi pi-bolt',
-          routerLink: '/demo/form',
-        },
-        {
-          label: 'Dialog',
-          // icon: 'pi pi-server',
-          routerLink: '/demo/dialog',
-        },
-      ],
-    },
-    {
-      label: 'Quản lý danh mục',
-      items: [
-        {
-          label: 'Loại công việc',
-          routerLink: '/category/TASK/Loại công việc',
-        }
-      ]
-    }
-  ];
-
   constructor(private primengConfig: PrimeNGConfig) {}
 
   ngOnInit(): void {
     // let code = "console.log('Hello from Function constructor!')";
     // let func = new Function(code);
     // func();
-    
+
     this.primengConfig.ripple = true;
 
     this.primengConfig.setTranslation({

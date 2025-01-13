@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../environments/environment.development';
 import {
   API_SSO_URL,
-} from './shared/service-proxies/ssoo-service-proxies';
+} from './shared/service-proxies/sso-service-proxies';
 import { ServiceProxiesModule } from './shared/service-proxies/service-proxies.module';
 import { API_QLCV_URL } from './shared/service-proxies/qlcv-service-proxies';
 

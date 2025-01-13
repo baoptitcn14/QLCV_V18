@@ -65,4 +65,5 @@ export class AppConst {
 
   // static readonly editor = ClassicEditor;
   static readonly placehoderImage = 'https://placehold.co/300x200';
+
 }

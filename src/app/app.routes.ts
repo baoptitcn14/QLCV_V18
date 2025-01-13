@@ -6,16 +6,22 @@ import { FormComponent } from './demo/form/form.component';
 import { HomeComponent } from './home/home.component';
 import { SetTokenComponent } from './shared/components/set-token/set-token.component';
 import { CategoryComponent } from './category/category.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { FileReportComponent } from './file-report/file-report.component';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: HomeComponent,
+    component: DashboardComponent,
   },
   {
-    path: 'home',
-    component: HomeComponent,
+    path: 'dashboard',
+    component: DashboardComponent,
+  },
+  {
+    path: 'file-report',
+    component: FileReportComponent,
   },
   {
     path: 'category/:groupCode/:title',

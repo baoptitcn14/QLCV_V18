@@ -1,0 +1,156 @@
+<div
+  class="user-org flex-column gap-3 fs-11"
+  [ngClass]="{ 'is-open': isOpen }"
+>
+  <div class="user-org-header d-flex align-items-center justify-content-between">
+    <span class="title">Phòng ban, nhân viên</span>
+    <i class="pi pi-times d-block" style="font-size: 1.5rem" (click)="onClose()"></i>
+  </div>
+
+  <div class="d-flex flex-column gap-3 px-2">
+    <div class="d-flex flex-wrap gap-5">
+      <div class="d-flex align-items-center fs-11">
+        <p-radioButton
+          [(ngModel)]="dataFilter.filterOption"
+          value="ME"
+          inputId="ingredient1"
+        />
+        <label for="ingredient1" class="ms-2"> Chỉ của tôi </label>
+      </div>
+
+      <div class="d-flex align-items-center fs-11">
+        <p-radioButton
+          value="ALL"
+          [(ngModel)]="dataFilter.filterOption"
+          inputId="ingredient2"
+        />
+        <label for="ingredient2" class="ms-2"> Tất cả </label>
+      </div>
+    </div>
+
+    <!-- begin when choose all -->
+
+    <div
+      class="d-flex flex-column gap-3"
+      *ngIf="dataFilter.filterOption === 'ALL'"
+    >
+      <!-- begin sort -->
+      <div class="sort d-flex align-items-center gap-3 justify-content-between">
+        <label>Sắp xếp</label>
+        <p-dropdown
+          [options]="listSortOption"
+          placeholder="Sắp xếp"
+          [group]="true"
+          [(ngModel)]="dataFilter.sortOption"
+          [id]="'sort-option'"
+        >
+          <ng-template let-group pTemplate="group">
+            <div class="d-flex align-items-center gap-3 fs-12">
+              <i class="{{ group.icon }}"></i>
+              <span>{{ group.label }}</span>
+            </div>
+          </ng-template>
+          <ng-template let-item pTemplate="item">
+            <div class="d-flex align-items-center gap-3 ps-3 fs-11">
+              <i class="{{ item.icon }}"></i>
+              <span>{{ item.label }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <!-- end sort -->
+
+      <!-- begin search -->
+      <div class="search d-flex align-items-center">
+        <div class="p-input-icon-left w-100">
+          <i class="pi pi-search"></i>
+          <input
+            class="fs-11 w-100"
+            type="text"
+            pInputText
+            placeholder="Tìm kiếm"
+            [(ngModel)]="dataFilter.search"
+          />
+        </div>
+      </div>
+      <!-- end search -->
+
+      <!-- begin list org -->
+      <div class="list-user-org">
+        @for (org of listOrg | searchOrgUser: { search: dataFilter.search,
+        sortOption: dataFilter.sortOption }; track org.organizationId) {
+        <div
+          class="org-item d-flex align-items-center justify-content-between gap-5"
+          [ngStyle]="{
+            paddingLeft: org.order! * 3 + (org.order! - 1) * 15 + 'px'
+          }"
+          (click)="toggleOrg(org)"
+        >
+          <div class="d-flex align-items-center gap-2">
+            <i
+              class="pi pi-chevron-{{ org._isToggle ? 'down' : 'right' }} fs-12"
+            ></i>
+            <span class="name">{{ org.name }}</span>
+          </div>
+          <div
+            class="org-item-check-box d-flex align-items-center gap-2"
+            [ngClass]="{ 'selected-all': org._isSelected }"
+            (click)="onSelectOrg(org, $event)"
+          >
+            <label for="org1" class="ml-2">
+              {{ org._totalUserSelected }}/{{ org._totalUser }}
+            </label>
+            <i
+              class="pi pi-{{ org._isSelected ? 'check-square' : 'stop' }}"
+            ></i>
+          </div>
+        </div>
+
+        <!-- begin list user -->
+        <div class="list-user" *ngIf="org._isToggle">
+          @for (user of org._filteredListUser; track user.key) {
+          <div
+            class="user-item d-flex align-items-center gap-5 justify-content-between"
+            [ngStyle]="{
+              paddingLeft: org.order! * 3 + (org.order! - 1) * 15 + 20 + 'px'
+            }"
+            (click)="onSelectUser(user, org)"
+          >
+            <span
+              class="name"
+              [ngClass]="{ 'text-primary': user._isSelected }"
+              >{{ user.info }}</span
+            >
+            <i
+              class="pi pi-{{
+                user._isSelected ? 'check-square text-primary' : 'stop'
+              }}"
+            ></i>
+          </div>
+          }
+        </div>
+
+        <!-- end list user -->
+
+        }
+      </div>
+
+      <!-- end list org -->
+    </div>
+
+    <!-- end when choose all -->
+  </div>
+
+  <!-- begin button save -->
+
+  <p-button
+    label="Lưu"
+    icon="pi pi-save"
+    [size]="'small'"
+    severity="primary"
+    (onClick)="onSave()"
+    [styleClass]="'button-save'"
+  ></p-button>
+
+  <!-- end button save -->
+</div>

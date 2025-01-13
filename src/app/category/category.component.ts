@@ -17,7 +17,13 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [TreeTableModule, CommonModule, ButtonModule, TagModule, InputTextModule],
+  imports: [
+    TreeTableModule,
+    CommonModule,
+    ButtonModule,
+    TagModule,
+    InputTextModule,
+  ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
 })
@@ -47,26 +53,31 @@ export class CategoryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.groupCode = this.activatedRoute.snapshot.params['groupCode'];
-    this.title = this.activatedRoute.snapshot.params['title'];
+    this.activatedRoute.params.subscribe((params) => {
+      this.groupCode = params['groupCode'];
+      this.title = params['title'];
 
-    if (this.groupCode) {
-      this.getListCategory().subscribe((res) => {
-        const data = res.map((item) => ({
-          key: item.id,
-          label: item.name,
-          data: item,
-          children: this.getChildren(item, res).map((child) => ({
-            key: child.id,
-            label: child.name,
-            data: child,
-          })),
-        }));
+      if (this.groupCode) {
+        this.getListCategory().subscribe(
+          (res) => {
+            const data = res.map((item) => ({
+              key: item.id,
+              label: item.name,
+              data: item,
+              children: this.getChildren(item, res).map((child) => ({
+                key: child.id,
+                label: child.name,
+                data: child,
+              })),
+            }));
 
-        this.data = data.filter((item) => !item.data.parentId);
-      }, error => {}, () => this.isLoading = false);
-    }
-      
+            this.data = data.filter((item) => !item.data.parentId);
+          },
+          (error) => {},
+          () => (this.isLoading = false)
+        );
+      }
+    });
   }
 
   onSearchGolbal(event: any) {

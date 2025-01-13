@@ -7,7 +7,6 @@ import {
   SSO_UserServiceProxy,
   UserDto,
 } from '../service-proxies/sso-service-proxies';
-import { SSOO_UserServiceProxy } from '../service-proxies/ssoo-service-proxies';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +16,6 @@ export class AppSessionService {
 
   constructor(
     private SSO_UserServiceProxy: SSO_UserServiceProxy,
-    private SSOO_UserServiceProxy: SSOO_UserServiceProxy,
     private cookieService: CookieService
   ) {}
 
@@ -30,7 +28,7 @@ export class AppSessionService {
       let token = this.cookieService.get(AppConst.authorization.authToken);
 
       if (token)
-        this.SSOO_UserServiceProxy.getCurrentUser().subscribe(
+        this.SSO_UserServiceProxy.getCurrentUser().subscribe(
           (res) => {
             this.user = res;
 

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { SSO_UserServiceProxy } from './sso-service-proxies';
+import { SSO_OrganizationClientServiceProxy, SSO_OrganizationServiceProxy, SSO_OrganizationUserServiceProxy, SSO_SSOServiceProxy, SSO_UserServiceProxy } from './sso-service-proxies';
 import { Qlcv_CategoryServiceProxy } from './qlcv-service-proxies';
-import { SSOO_UserServiceProxy } from './ssoo-service-proxies';
 
 @NgModule({
   declarations: [],
@@ -9,9 +8,11 @@ import { SSOO_UserServiceProxy } from './ssoo-service-proxies';
   providers: [
     // begin sso
     SSO_UserServiceProxy,
+    SSO_OrganizationClientServiceProxy,
+    SSO_OrganizationServiceProxy,
+    SSO_OrganizationUserServiceProxy,
+    SSO_SSOServiceProxy,
     // end sso
-
-    SSOO_UserServiceProxy,
 
     // begin  qlcv
     Qlcv_CategoryServiceProxy,

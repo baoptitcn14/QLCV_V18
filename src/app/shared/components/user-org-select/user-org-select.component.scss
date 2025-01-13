@@ -1,0 +1,134 @@
+::ng-deep {
+    #sort-option {
+        .p-inputtext {
+            font-size: 10px !important;
+            min-width: 160px;
+        }
+    }
+
+    .button-save {
+        width: 100%;
+        border-radius: 0 0 6px 6px;
+    }
+}
+
+.user-org {
+    border: 1px solid #007bff;
+    border-radius: 6px;
+    box-shadow: 0px 0px 5px 0px #007bff;
+    width: 300px;    
+    max-width: 100%;    
+    max-height: 100%;
+    display: none;
+
+    &.is-open {
+        display: flex;
+    }
+
+    &.absolute {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        &.position-left {
+            left: 0;
+            right: unset;
+        }
+
+        &.position-right {
+            right: 0;
+            left: unset;
+        }
+
+        &.position-top {
+            top: 0;
+            bottom: unset;
+        }
+
+        &.position-bottom {
+            bottom: 0;
+            top: unset;
+        }
+
+        &.position-center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    &-header {
+
+        background-color: #007bff;
+        color: #fff;
+        padding: 5px;
+        border-radius: 6px 6px 0 0;
+
+        .title {
+            font-size: 14px;
+            font-weight: 600;
+        }        
+
+        .pi-times {
+            text-align: right;
+            cursor: pointer;
+        }
+    }
+
+    .list-user-org {
+        height: 300px;
+        overflow: auto;
+
+        .org-item {
+            background-color: #f5f4f4;
+            padding: 3px;
+            cursor: pointer;
+            user-select: none;
+
+            &:not(:last-child) {
+                border-bottom: 1px dotted #e0e0e0;
+            }
+
+            &-check-box {
+                background-color: #e0e0e0;
+                padding: 3px;
+                border-radius: 3px;
+
+                &.selected-all {
+                    background-color: #007bff;
+                    color: #fff;
+                }
+            }
+
+            &:hover {
+                background-color: #eff6ff;
+                color: #007bff;
+                transition: all 0.3s;
+
+                .org-item-check-box {
+                    background-color: #007bff;
+                    color: #fff;
+                    transition: all 0.3s;
+                }
+            }
+        }
+
+        .list-user {
+            .user-item {
+                padding: 3px 5px;
+                user-select: none;
+                cursor: pointer;
+
+                &:not(:last-child) {
+                    border-bottom: 1px dotted #e0e0e0;
+                }
+
+                &:hover {
+                    background-color: #eff6ff;
+                    color: #007bff;
+                    transition: all 0.3s;
+                }
+            }
+        }
+    }
+}

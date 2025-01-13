@@ -22,6 +22,7 @@ import {
 import { of, switchMap } from 'rxjs';
 import { AppConst } from '../../app-const';
 import { environment } from '../../../../environments/environment.development';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-top',
@@ -84,7 +85,8 @@ export class TopComponent implements OnInit {
 
   constructor(
     public session: AppSessionService,
-    private userServiceProxy: SSO_UserServiceProxy
+    private userServiceProxy: SSO_UserServiceProxy,
+    private cookieSerivce: CookieService
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +95,26 @@ export class TopComponent implements OnInit {
 
   onUyQuyen(data: any) {
     console.log(data);
+  }
+
+  onLogin() {
+    this.cookieSerivce.set(
+      AppConst.authorization.authToken,
+      environment.token,
+      environment.tokenExpireDate,
+      '/',
+      environment.domain
+    );
+
+    this.cookieSerivce.set(
+      AppConst.authorization.encrptedAuthTokenName,
+      environment.encToken,
+      environment.tokenExpireDate,
+      '/',
+      environment.domain
+    );
+
+    window.location.href = 'http://localhost:4500'
   }
 
   private initFormUyenQuyen() {

@@ -27,9 +27,6 @@ import { SettingService } from '../shared/services/setting.service';
 })
 export class DashboardComponent implements OnInit {
 
-
-
-
   listGroup:any = [];
   listExclude = ['/app/management/dashboard/task', '/app/management/dashboard/post', '/app/management/dashboard/data', '/app/management/dashboard/transfer'];
   setting:any;
