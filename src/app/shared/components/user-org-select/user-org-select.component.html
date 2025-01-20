@@ -1,14 +1,22 @@
 <div
   class="user-org flex-column gap-3 fs-11"
-  [ngClass]="{ 'is-open': isOpen }"
+  [ngClass]="{ 'is-open': isOpen, 'basic-style': config.basicStyle }"
 >
-  <div class="user-org-header d-flex align-items-center justify-content-between">
+  <div
+    class="user-org-header d-flex align-items-center justify-content-between"
+  >
     <span class="title">Phòng ban, nhân viên</span>
-    <i class="pi pi-times d-block" style="font-size: 1.5rem" (click)="onClose()"></i>
+    <i
+      *ngIf="config.showIconClose"
+      class="pi pi-times d-block"
+      style="font-size: 1.5rem"
+      (click)="onClose()"
+    ></i>
   </div>
 
   <div class="d-flex flex-column gap-3 px-2">
-    <div class="d-flex flex-wrap gap-5">
+    <!-- begin only me or all option -->
+    <div class="d-flex flex-wrap gap-5" *ngIf="config.showOnlyMeOption">
       <div class="d-flex align-items-center fs-11">
         <p-radioButton
           [(ngModel)]="dataFilter.filterOption"
@@ -27,6 +35,7 @@
         <label for="ingredient2" class="ms-2"> Tất cả </label>
       </div>
     </div>
+    <!-- end only me or all  option -->
 
     <!-- begin when choose all -->
 
@@ -88,7 +97,9 @@
         >
           <div class="d-flex align-items-center gap-2">
             <i
-              class="pi pi-chevron-{{ org._isToggle ? 'down' : 'right' }} fs-12"
+              class="pi pi-chevron-{{
+                org._isToggled ? 'down' : 'right'
+              }} fs-12"
             ></i>
             <span class="name">{{ org.name }}</span>
           </div>
@@ -96,6 +107,7 @@
             class="org-item-check-box d-flex align-items-center gap-2"
             [ngClass]="{ 'selected-all': org._isSelected }"
             (click)="onSelectOrg(org, $event)"
+            *ngIf="selectMode != 'SINGLE'"
           >
             <label for="org1" class="ml-2">
               {{ org._totalUserSelected }}/{{ org._totalUser }}
@@ -107,7 +119,7 @@
         </div>
 
         <!-- begin list user -->
-        <div class="list-user" *ngIf="org._isToggle">
+        <div class="list-user" *ngIf="org._isToggled">
           @for (user of org._filteredListUser; track user.key) {
           <div
             class="user-item d-flex align-items-center gap-5 justify-content-between"

@@ -79,11 +79,11 @@ export class SearchOrgUserPipe implements PipeTransform {
                 : b['info']!.localeCompare(a['info']!)
             );
 
-            item._isToggle = listUserMatch.length > 0;
+            item._isToggled = listUserMatch.length > 0;
 
             return item;
           })
-          .filter((item) => item._isToggle);
+          .filter((item) => item._isToggled);
       }
 
       return value;

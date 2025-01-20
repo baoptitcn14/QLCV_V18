@@ -20,6 +20,17 @@
     max-width: 100%;    
     max-height: 100%;
     display: none;
+    background-color: #fff;   
+
+    &.basic-style {
+        box-shadow: none;
+        border: none;
+
+        .user-org-header {
+            background-color: transparent;
+            color: #007bff;
+        }
+    }
 
     &.is-open {
         display: flex;

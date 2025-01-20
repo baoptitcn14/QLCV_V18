@@ -24,6 +24,9 @@
 // import scrollbar custom
 @import "scss/scrollbar";
 
+// import color custom
+@import "scss/color";
+
 // dialog custom
 .p-dialog-custom {
     .p-dialog-content {
@@ -31,7 +34,7 @@
     }
 
     .p-dialog-_content {
-        padding: 0 1.5rem 2rem 1.5rem;
+        padding: 2rem 1.5rem;
     }
 }
 

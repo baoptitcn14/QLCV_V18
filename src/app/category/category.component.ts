@@ -86,6 +86,8 @@ export class CategoryComponent implements OnInit {
     }
   }
 
+  onCreateCategory() {}
+
   private getChildren(
     category: CategoryOutputDto,
     listData: CategoryOutputDto[]

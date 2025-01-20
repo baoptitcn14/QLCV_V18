@@ -7,3 +7,10 @@
     <li class="p-menuitem"><i class="{{ item.icon }}"></i> {{ item.label }}</li>
   </ng-template> -->
 </p-menubar>
+
+<ng-container *ngIf="visibleTaskDialog">
+  <app-task-dialog
+    [visible]="visibleTaskDialog"
+    (onHideEvent)="visibleTaskDialog = false"
+  ></app-task-dialog>
+</ng-container>

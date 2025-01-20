@@ -1,0 +1,746 @@
+<p-dialog
+  [(visible)]="visible"
+  [breakpoints]="{
+    '1920px': '96vw',
+    '1600px': '96vw',
+    '960px': '75vw',
+    '640px': '90vw'
+  }"
+  [modal]="true"
+  [maximizable]="true"
+  (onHide)="onHide()"
+>
+  <ng-template pTemplate="header">
+    <div class="d-flex justify-content-between align-items-center flex-grow-1">
+      <span class="p-dialog-title">{{ title }}</span>
+      <div class="d-flex gap-1 align-items-center position-relative">
+        <p-button
+          type="button"
+          label="Báo cáo"
+          icon="pi pi-chart-bar"
+          [size]="'small'"
+          severity="success"
+        ></p-button>
+
+        <p-button
+          type="button"
+          label="Trao đổi"
+          icon="pi pi-comments"
+          [size]="'small'"
+          [outlined]="true"
+        ></p-button>
+
+        <p-splitButton
+          label="Mở rộng"
+          [size]="'small'"
+          icon="pi pi-ellipsis-v"
+          [model]="extendsActions"
+          [outlined]="true"
+        />
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="form">
+    <form [formGroup]="form">
+      <div class="p-dialog-_content d-flex flex-column gap-4">
+        <div class="row">
+          <div class="col-md-8 col-lg-9">
+            <p-fieldset [toggleable]="true">
+              <ng-template pTemplate="header">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="pi pi-info-circle text-info"></i>
+                  <span class="font-bold">Thông tin</span>
+                </div>
+              </ng-template>
+
+              <div class="d-flex flex-column gap-2">
+                <!-- #region parent & type task -->
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="d-flex flex-column gap-2">
+                      <label>Công việc cha</label>
+                      <p-autoComplete
+                        formControlName="parentId"
+                        [minLength]="3"
+                        [suggestions]="filteredParentTasks"
+                        [virtualScrollItemSize]="34"
+                        [optionLabel]="'_title'"
+                        [delay]="300"
+                        [variant]="'filled'"
+                        [size]="'small'"
+                        [inputStyle]="{ width: '100%' }"
+                        [style]="{ width: '100%' }"
+                        [scrollHeight]="'400px'"
+                        [placeholder]="'Tìm kiếm công việc cha'"
+                        [showClear]="true"
+                        (completeMethod)="filterParentTasks($event)"
+                      >
+                        <ng-template let-parentTask pTemplate="item">
+                          <div class="d-flex align-items-center gap-2">
+                            <div class="flex-grow-1">
+                              {{ parentTask.title }}
+                            </div>
+                            <div class="text-primary">
+                              <b class="fs-10 text-mute">HHT:</b>
+                              {{
+                                parentTask.hanHoanThanh
+                                  | longToDatePipe : "dd/MM/yyyy"
+                              }}
+                            </div>
+                          </div>
+                        </ng-template>
+                      </p-autoComplete>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="d-flex flex-column gap-2">
+                      <label>Loại công việc</label>
+                      <p-dropdown
+                        formControlName="loaiCongViecId"
+                        [options]="listLoaiCongViec"
+                        [virtualScroll]="true"
+                        [virtualScrollItemSize]="20"
+                        [style]="{ width: '100%' }"
+                        [filter]="true"
+                        [filterBy]="'name'"
+                        [optionLabel]="'name'"
+                        [scrollHeight]="'200px'"
+                        [required]="true"
+                        variant="filled"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- #end region -->
+
+                <!-- #region task info -->
+                <div class="col-md-12 basic-info">
+                  <div class="d-flex flex-column gap-2">
+                    <div class="d-flex gap-2 align-items-center">
+                      <label>Hạn hoàn thành</label>
+                      <p-calendar
+                        formControlName="hanHoanThanh"
+                        [required]="true"
+                        class="flex-grow-1"
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        [style]="{ width: '100%' }"
+                        [dateFormat]="'dd/mm/yy'"
+                        [readonlyInput]="true"
+                        variant="filled"
+                      />
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center">
+                      <label>Thời lượng chỉ định</label>
+                      <p-inputNumber
+                        formControlName="thoiGianThucHien"
+                        class="flex-grow-1"
+                        [suffix]="donViThucHien.value == 'D' ? ' ngày' : ' giờ'"
+                        [style]="{ width: '100%' }"
+                        [min]="0"
+                        variant="filled"
+                      />
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center">
+                      <label>Thời lượng công việc con</label>
+                      <p-inputNumber
+                        formControlName="tongThoiGianChiDinhViecCon"
+                        class="flex-grow-1"
+                        [suffix]="donViThucHien.value == 'D' ? ' ngày' : ' giờ'"
+                        [style]="{ width: '100%' }"
+                        [min]="0"
+                        variant="filled"
+                      />
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center">
+                      <label>Đơn vị thực hiện</label>
+                      <p-dropdown
+                        formControlName="value2"
+                        #donViThucHien
+                        class="flex-grow-1"
+                        optionLabel="label"
+                        optionValue="code"
+                        [options]="listDonViThucHien"
+                        [style]="{ width: '100%' }"
+                        [scrollHeight]="'200px'"
+                        [required]="true"
+                        variant="filled"
+                      />
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center">
+                      <label>Tiêu đề</label>
+                      <input
+                        formControlName="title"
+                        pInputText
+                        class="flex-grow-1"
+                        [required]="true"
+                        variant="filled"
+                      />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                      <label>Nội dung</label>
+                      <textarea
+                        formControlName="content"
+                        pInputTextarea
+                        rows="5"
+                        cols="30"
+                        variant="filled"
+                        [autoResize]="true"
+                        class="flex-grow-1"
+                      ></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center">
+                      <label>Kích hoạt định kỳ</label>
+                      <p-checkbox />
+                      <p-button
+                        type="button"
+                        label="Cấu hình định kỳ"
+                        icon="pi pi-cog"
+                        [size]="'small'"
+                        severity="secondary"
+                      ></p-button>
+                    </div>
+                  </div>
+                </div>
+                <!-- #end region -->
+              </div>
+            </p-fieldset>
+          </div>
+          <!-- #region task history -->
+          <div class="col-md-4 col-lg-3">
+            <p-fieldset [toggleable]="true">
+              <ng-template pTemplate="header">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="pi pi-history text-info"></i>
+                  <span class="font-bold">Lịch sử</span>
+                </div>
+              </ng-template>
+              <p-timeline [value]="listCongViecLog">
+                <ng-template pTemplate="marker" let-log>
+                  <i
+                    class="pi pi-circle-on {{ log.actionDisplay!.fontColor }}"
+                  ></i>
+                </ng-template>
+                <ng-template pTemplate="content" let-log>
+                  <small class="p-text-secondary">{{
+                    log.creationTime | date : "dd/MM/yyyy HH:mm"
+                  }}</small>
+                  <br />
+                  <small>{{ log.fullName }}</small>
+                </ng-template>
+                <ng-template pTemplate="opposite" let-log>
+                  {{ log.actionDisplay.name }}
+                  <br />
+                  <p-button
+                    label="Chi tiết"
+                    [size]="'small'"
+                    [icon]="'pi pi-info-circle'"
+                    [link]="true"
+                  />
+                </ng-template>
+              </p-timeline>
+            </p-fieldset>
+          </div>
+          <!-- #end region -->
+        </div>
+
+        <!-- #region org > emplyees -->
+        <p-fieldset [toggleable]="true" *ngIf="!isLoading">
+          <ng-template pTemplate="header">
+            <div class="d-flex align-items-center gap-2">
+              <i class="pi pi-users text-primary"></i>
+              <span class="font-bold">Nhân viên</span>
+            </div>
+          </ng-template>
+          <div class="row">
+            <!-- begin người xử lý -->
+            <div class="col-md-4">
+              <div class="d-flex flex-column gap-3">
+                <label>Nguời xử lý</label>
+                <app-user-select
+                  [fullName]="xuLy.fullName"
+                  [orgName]="xuLy.orgName"
+                  [listUserSelected]="
+                    this.form!.get('listNguoiBoPhanXuLy')!.value
+                  "
+                  [listOrg]="listOrg"
+                ></app-user-select>
+              </div>
+            </div>
+            <!-- end người xử lý -->
+
+            <!-- begin người duyệt -->
+            <div class="col-md-4">
+              <div class="d-flex flex-column gap-3">
+                <label>Nguời duyệt</label>
+                <app-user-select
+                  [fullName]="duyet.fullName"
+                  [orgName]="duyet.orgName"
+                  [listUserSelected]="
+                    this.form!.get('listNguoiBoPhanDuyet')!.value
+                  "
+                  [listOrg]="listOrg"
+                ></app-user-select>
+              </div>
+            </div>
+            <!-- end người duyệt -->
+
+            <!-- begin người giám sát -->
+            <div class="col-md-4">
+              <div class="d-flex flex-column gap-3">
+                <label>Nguời giám sát</label>
+                <app-user-select
+                  [fullName]="giamSat?.fullName"
+                  [orgName]="giamSat?.orgName"
+                  [listUserSelected]="
+                    this.form!.get('listNguoiBoPhanGiamSat')!.value
+                  "
+                  [listOrg]="listOrg"
+                ></app-user-select>
+                <!-- <div
+                  class="d-flex gap-2 ps-3 align-items-center user-select"
+                  (click)="op3.toggle($event)"
+                  pTooltip="Click để thay đổi"
+                  tooltipPosition="top"
+                >
+                  <div class="d-flex flex-column gap-1 ps-3">
+                    <b class="org-name text-primary">{{ giamSat?.orgName }}</b>
+                    <span class="employee-name">{{ giamSat?.fullName }}</span>
+                  </div>
+
+                  <i class="pi pi-pencil"></i>
+
+                  <p-overlayPanel #op3>
+                    <app-user-org-select
+                      [isOpen]="true"
+                      [listUserSelected]="
+                        this.form.get('listNguoiBoPhanGiamSat')!.value
+                      "
+                      [selectMode]="'SINGLE'"
+                      [isGetNewListOrg]="false"
+                      [listOrg]="listOrg"
+                    ></app-user-org-select>
+                  </p-overlayPanel>
+                </div> -->
+              </div>
+            </div>
+            <!-- end người giám sát -->
+          </div>
+        </p-fieldset>
+        <!-- #end region -->
+
+        <!-- #region extends -->
+        <p-fieldset [toggleable]="true">
+          <ng-template pTemplate="header">
+            <div class="d-flex align-items-center gap-2">
+              <i class="pi pi-star-fill text-warning"></i>
+              <span class="font-bold">Mở rộng</span>
+            </div>
+          </ng-template>
+
+          <ng-container *ngTemplateOutlet="extends"></ng-container>
+        </p-fieldset>
+        <!-- #end region -->
+      </div>
+    </form>
+  </ng-container>
+  <ng-template pTemplate="footer">
+    <dialog-footer
+      [isNew]="true"
+      [isValid]="true"
+      (onCloseEvent)="onHide()"
+      (onSaveEvent)="onSave()"
+    ></dialog-footer>
+  </ng-template>
+</p-dialog>
+
+<!-- #region extends -->
+<ng-template #extends>
+  <p-tabView (activeIndexChange)="onTabChange($event)">
+    <!-- #region tiêu chí -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="pi pi-star"></i>
+          <span class="font-bold"> Tiêu chí hoàn thành </span>
+        </div>
+      </ng-template>
+
+      <p-table
+        #dt1
+        [value]="listTieuChi"
+        responsiveLayout="stack"
+        [globalFilterFields]="['title']"
+        [breakpoint]="'960px'"
+        [styleClass]="
+          'p-datatable-sm p-datatable-gridlines p-datatable-striped'
+        "
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="caption">
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <p-iconField iconPosition="left" class="ml-auto">
+              <p-inputIcon>
+                <i class="pi pi-search"></i>
+              </p-inputIcon>
+              <input
+                #st1
+                pInputText
+                type="text"
+                class="p-inputtext-sm"
+                (input)="dt1.filterGlobal(st1!.value, 'contains')"
+                placeholder="Nhập tên tiêu chí"
+              />
+            </p-iconField>
+
+            <p-button
+              label="Thêm mới"
+              icon="pi pi-plus"
+              severity="success"
+              [size]="'small'"
+              (onClick)="onCreateTieuChi()"
+            ></p-button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th class="text-center" [width]="40">#</th>
+            <th>Tên</th>
+            <th>Thông số</th>
+            <th [width]="60"></th>
+          </tr>
+        </ng-template>
+        <ng-template
+          pTemplate="body"
+          let-tieuChi
+          let-i="rowIndex"
+          let-columns="columns"
+        >
+          <tr>
+            <td class="text-center">{{ i + 1 }}</td>
+            <td>
+              {{ tieuChi.title }}
+            </td>
+            <td>
+              <div class="d-flex flex-column gap-3">
+                <div class="thong-so" *ngFor="let item of tieuChi.listThongSo">
+                  - {{ item }}
+                </div>
+              </div>
+            </td>
+            <td>
+              <p-button
+                icon="pi pi-pencil"
+                outlined="true"
+                severity="primary"
+                [size]="'small'"
+                (onClick)="onEditTieuChi(tieuChi, i)"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <!-- #end region -->
+
+    <!-- #region cong viec con -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="pi pi-list-check"></i>
+          <span class="font-bold"> Công việc con </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table
+          #dt2
+          [value]="listCongViecCon.controls"
+          responsiveLayout="stack"
+          [globalFilterFields]="['title']"
+          [breakpoint]="'960px'"
+          [styleClass]="
+            'p-datatable-sm p-datatable-gridlines p-datatable-striped'
+          "
+          [tableStyle]="{ 'min-width': '50rem' }"
+        >
+          <ng-template pTemplate="caption">
+            <div
+              class="d-flex align-items-center justify-content-between gap-3"
+            >
+              <p-iconField iconPosition="left" class="ml-auto">
+                <p-inputIcon>
+                  <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input
+                  #st2
+                  pInputText
+                  type="text"
+                  class="p-inputtext-sm"
+                  (input)="dt2.filterGlobal(st2!.value, 'contains')"
+                  placeholder="Nhập tên công việc"
+                />
+              </p-iconField>
+
+              <p-button
+                label="Thêm mới"
+                icon="pi pi-plus"
+                severity="success"
+                [size]="'small'"
+                *ngIf="taskId"
+                (onClick)="onCreateTask()"
+              ></p-button>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class="text-center" [width]="40">#</th>
+              <th>Tên</th>
+              <th>Người xử lý</th>
+              <th>Người duyệt</th>
+              <th>Hạn hoàn thành</th>
+              <th [width]="60"></th>
+            </tr>
+          </ng-template>
+
+          <ng-template
+            pTemplate="body"
+            let-childTask
+            let-i="rowIndex"
+            let-columns="columns"
+          >
+            <!-- begin if has taskId -->
+            <tr *ngIf="taskId">
+              <td class="text-center">{{ i + 1 }}</td>
+              <td>
+                <div
+                  class="d-flex gap-3 align-items-center justify-content-between"
+                >
+                  <span>
+                    {{ childTask.get("title").value }}
+                  </span>
+                  <p-tag
+                    [severity]="childTask.get('status').value?.tagColor"
+                    [value]="childTask.get('status').value?.name"
+                  />
+                </div>
+              </td>
+              <td>
+                {{ childTask.get("xuLy")?.value?.fullName }}
+              </td>
+              <td>
+                {{ childTask.get("duyet")?.value?.fullName }}
+              </td>
+              <td>
+                {{
+                  childTask.get("hanHoanThanh").value
+                    | longToDatePipe : "dd/MM/yyyy"
+                }}
+              </td>
+              <td class="text-center">
+                <p-button
+                  icon="pi pi-info"
+                  outlined="true"
+                  severity="primary"
+                  [size]="'small'"
+                  pTooltip="Chi tiết"
+                ></p-button>
+              </td>
+            </tr>
+            <!-- end has taskId -->
+
+            <!-- begin if taskId is null -->
+            <tr *ngIf="!taskId" [formGroup]="childTask">
+              <td class="text-center">{{ i + 1 }}</td>
+              <td>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="title"
+                  variant="filled"
+                  class="p-inputtext-sm w-100"
+                />
+              </td>
+              <td>
+                <app-user-select
+                  [fullName]="childTask.get('xuLy').value?.fullName"
+                  [orgName]="childTask.get('xuLy').value?.orgName"
+                  [listUserSelected]="
+                    childTask.get('listNguoiBoPhanXuLy')!.value
+                  "
+                  [listOrg]="listOrg"
+                ></app-user-select>
+              </td>
+              <td>
+                <app-user-select
+                  [fullName]="childTask.get('duyet').value?.fullName"
+                  [orgName]="childTask.get('duyet').value?.orgName"
+                  [listUserSelected]="
+                    childTask.get('listNguoiBoPhanDuyet')!.value
+                  "
+                  [listOrg]="listOrg"
+                ></app-user-select>
+              </td>
+              <td>
+                <p-calendar
+                  formControlName="hanHoanThanh"
+                  [maxDate]="form?.get('hanHoanThanh')?.value"
+                  variant="filled"
+                  class="p-inputtext-sm w-100"
+                  styleClass="w-100"
+                  appendTo="body"
+                ></p-calendar>
+              </td>
+              <td class="text-center">
+                <p-button
+                  icon="pi pi-trash"
+                  outlined="true"
+                  severity="danger"
+                  [size]="'small'"
+                  pTooltip="Xóa"
+                ></p-button>
+              </td>
+            </tr>
+            <!-- end taskId is null -->
+          </ng-template>
+        </p-table>
+      </ng-template>
+    </p-tabPanel>
+    <!-- #end region -->
+
+    <!-- #region doi tuong -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="pi pi-users"></i>
+          <span class="font-bold"> Đối tượng </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        Complex Content to Lazy Load
+      </ng-template>
+    </p-tabPanel>
+    <!-- #end region -->
+
+    <!-- #region file dinh kem -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="pi pi-file-plus"></i>
+          <span class="font-bold"> Tập đính kèm </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        Complex Content to Lazy Load
+      </ng-template>
+    </p-tabPanel>
+    <!-- #end region -->
+  </p-tabView>
+</ng-template>
+<!-- #end region -->
+
+<!-- #region tam dung cho duyet -->
+<!-- <ng-template #choDuyetTemplate>
+
+  <div id="task-flow" *ngIf="checkDisplay()" class="bg-blue-hoki row margin-0 padding-tb-15">
+    <div id="task__task-flow--action" class="col-xs-12 margin-b-15">
+      <span class="font-size-18 font-white">{{ actionName }}</span>
+      <div class="pull-right">
+        <ng-container *ngFor="let item of listButton">
+          <app-button *ngIf="item.checkDisplay()" [classCssButton]="item.classCssButton" [icon]="item.icon"
+            [text]="item.text" (callBack)="item.callBack()"></app-button>
+        </ng-container>
+      </div>
+    </div>
+    <ng-container *ngIf="form.value.value10 == 'REPORTTODO' || form.value.status == 'FINISH'"
+      [ngTemplateOutlet]="listXepLoaiTemplate"></ng-container>
+    <ng-container *ngIf="form.value.value10 != 'REPORTTODO' && form.value.value9 != null"
+      [ngTemplateOutlet]="choDuyetTemplate"></ng-container>
+  </div>
+  
+  <ng-template #listXepLoaiTemplate>
+    <div class="margin-b-10 display-block full-width clearfix" *ngFor="let item of form.value.listXepLoai">
+      <span class="col-xs-4 font-white">{{ item.xuLy.fullName }}</span>
+      <span class="col-xs-4 font-white">{{ item.xuLy.orgName }}</span>
+      <span class="col-xs-4 font-white">{{ _ut.findPick(this._categoryService.listStatusBusiness, 'id', item.status,
+        'name') }}</span>
+      <span class="font-size-11 col-xs-4 font-white">( {{ item.ngayBaoCao | longToDatePipe:'dd/MM/yyyy' }} lúc {{
+        item.ngayBaoCao | longToDatePipe:'hh:mm' }} )</span>
+      <span class="font-size-11 col-xs-4 font-white">Xếp loại: {{ item.xepLoai }}</span>
+      <span class="font-size-11 col-xs-4 font-white">Nội dung: {{ item.noiDungXepLoai }}</span>
+  
+      <div *ngIf="item.xuLy.userId == this.form.get('xuLy').value.userId">
+        <span class="col-xs-12 font-white padding-tb-10" *ngIf="item.listTieuChiHoanThanh != null">Tiêu chí hoàn thành công việc</span>
+        <div class="row padding-l-15" *ngFor="let tieuChi of item.listTieuChiHoanThanh">
+          <span class="font-size-13 col-4 col-xs-4 font-white" *ngIf="tieuChi.bool1">{{ tieuChi.name }} :
+            {{tieuChi.tienDoHoanThanh}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="margin-b-10 full-width clearfix hidden-xs">
+    <span class="col-xs-3 font-white">Nhân viên</span>
+    <span class="col-xs-3 font-white">Bộ phận</span>
+    <span class="col-xs-2 font-white">Nội dung</span>
+    <span class="col-xs-2 font-white">Ngày</span>
+    <span class="col-xs-2 font-white">Trạng thái</span>
+    <span class="font-size-11 col-xs-3 font-white">{{ form.value.boPhanTao.fullName }}</span>
+    <span class="font-size-11 col-xs-3 font-white">{{ form.value.boPhanTao.orgName }}</span>
+    <span class="font-size-11 col-xs-2 font-white"></span>
+    <span class="font-size-11 col-xs-2 font-white">( {{ form.value.boPhanTao.creationTime | longToDatePipe:'dd/MM/yyyy'
+      }} lúc {{ form.value.boPhanTao.creationTime | longToDatePipe:'hh:mm' }} )</span>
+    <span class="font-size-11 col-xs-2 font-white">Chờ duyệt</span>
+  </div>
+
+  <div class="margin-b-10 hidden-md hidden-lg padding-l-15">
+    <div class="font-white">Nhân viên: {{ form.value.boPhanTao.fullName }}</div>
+    <div class="font-white">Bộ phận: {{ form.value.boPhanTao.orgName }}</div>
+    <div class="font-white">Nội dung:</div>
+    <div class="font-white">Ngày: ( {{ form.value.boPhanTao.creationTime | longToDatePipe:'dd/MM/yyyy' }} lúc {{
+      form.value.boPhanTao.creationTime | longToDatePipe:'hh:mm' }} )</div>
+    <div class="font-white">Trạng thái: Chờ duyệt</div>
+  </div>
+
+  <div class="margin-b-10 full-width margin-t-10 clearfix hidden-xs">
+    <div class="font-white margin-lr-15 margin-b-7 full-width" style="border-bottom: 0.5px dotted;"></div>
+    <span class="col-xs-3 font-white">Nhân viên duyệt</span>
+    <span class="col-xs-3 font-white">Bộ phận duyệt</span>
+    <span class="col-xs-2 font-white">Nội dung</span>
+    <span class="col-xs-2 font-white">Ngày</span>
+    <span class="col-xs-2 font-white">Trạng thái</span>
+
+
+    <ng-container *ngFor="let item of form.value.listDuyet">
+      <span class="font-size-11 col-xs-3 font-white margin-b-4">{{ item.fullName }}</span>
+      <span class="font-size-11 col-xs-3 font-white margin-b-4">{{ item.orgName }}</span>
+      <span class="font-size-11 col-xs-2 font-white margin-b-4">{{ item.message }}</span>
+      <span class="font-size-11 col-xs-2 font-white margin-b-4" *ngIf="!item.creationTime"></span>
+      <span class="font-size-11 col-xs-2 font-white margin-b-4" *ngIf="item.creationTime">( {{ item.creationTime |
+        date:'dd/MM/yyyy' }} lúc {{ item.creationTime | date:'hh:mm' }} )</span>
+      <span class="font-size-11 col-xs-2 font-white margin-b-4">{{ item.statusDisplay }}</span>
+    </ng-container>
+  </div>
+
+  <div class="hidden-md hidden-lg">
+    <ng-container *ngFor="let item of form.value.listDuyet">
+      <div class="font-white margin-lr-15 margin-b-7 full-width" style="border-bottom: 0.5px dotted;"></div>
+      <div class="margin-b-10 padding-l-15">
+        <div class="font-white">Nhân viên duyệt: {{ item.fullName }}</div>
+        <div class="font-white">Bộ phận duyệ: {{ item.orgName }}</div>
+        <div class="font-white">Nội dung: {{ item.message }}</div>
+        <div class="font-white">Ngày: ( {{ item.creationTime | date:'dd/MM/yyyy' }} lúc {{ item.creationTime |
+          date:'hh:mm' }} )</div>
+        <div class="font-white">Trạng thái: {{ item.statusDisplay }}</div>
+      </div>
+    </ng-container>
+  </div>
+
+</ng-template> -->
+<!-- #endregion -->

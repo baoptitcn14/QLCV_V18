@@ -1,4 +1,3 @@
-
 <div class="p-dialog-_content">
   <p>dialog-test works!</p>
 
@@ -10,7 +9,6 @@
     severity="primary"
     (onClick)="onShowDialog()"
   />
-
 </div>
 
-<dialog-footer [isNew]="isNew" [isValid]="true"></dialog-footer>
+<dialog-footer [isNew]="isNew" [isValid]="true" (onCloseEvent)="onHide()"></dialog-footer>

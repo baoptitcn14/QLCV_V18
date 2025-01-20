@@ -16,8 +16,8 @@ export class DialogTestComponent implements OnInit {
 
   constructor(
     private dialogService: DialogService,
-    public ref: DynamicDialogRef,
-    public config: DynamicDialogConfig
+    public config: DynamicDialogConfig,
+    private ref: DynamicDialogRef
   ) {}
 
   ngOnInit(): void {
@@ -29,5 +29,9 @@ export class DialogTestComponent implements OnInit {
     this.dialogService.open(DialogTest2Component, {
       styleClass: 'p-dialog-custom',
     })
+  }
+
+  onHide() {
+    this.ref.close();
   }
 }

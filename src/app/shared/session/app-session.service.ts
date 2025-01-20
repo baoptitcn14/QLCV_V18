@@ -7,12 +7,14 @@ import {
   SSO_UserServiceProxy,
   UserDto,
 } from '../service-proxies/sso-service-proxies';
+import { ShareKeyDto } from '../service-proxies/qlcv-service-proxies';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppSessionService {
   user: UserDto | null = null;
+  sharedKey: ShareKeyDto | undefined;
 
   constructor(
     private SSO_UserServiceProxy: SSO_UserServiceProxy,
@@ -31,6 +33,17 @@ export class AppSessionService {
         this.SSO_UserServiceProxy.getCurrentUser().subscribe(
           (res) => {
             this.user = res;
+
+            var sharedKey = this.cookieService.get(AppConst.sharedKey);
+
+            if (sharedKey && sharedKey != '') {
+                this.sharedKey = ShareKeyDto.fromJS(JSON.parse(sharedKey));
+
+                if (this.sharedKey.currentUserId != this.user.id) {
+                    this.cookieService.delete(AppConst.sharedKey, '/');
+                    this.sharedKey = undefined;
+                }
+            }
 
             // subscriber.complete();
           },

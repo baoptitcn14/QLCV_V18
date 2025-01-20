@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogTestComponent } from '../../shared/dialog-partials/dialog-test/dialog-test.component';
 
 @Component({
@@ -12,9 +12,12 @@ import { DialogTestComponent } from '../../shared/dialog-partials/dialog-test/di
   styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
+
+  ref: DynamicDialogRef | undefined;
+
   constructor(private dialogService: DialogService) {}
   openPasswordDialog() {
-    this.dialogService.open(DialogTestComponent, {
+    this.ref = this.dialogService.open(DialogTestComponent, {
       header: 'Select a Product',
       width: '50vw',
       contentStyle: { overflow: 'auto' },
@@ -27,6 +30,12 @@ export class DialogComponent {
       data: {
         isNew: true,
       },
+    });
+
+    this.ref.onClose.subscribe((product) => {
+      if (product) {
+        console.log('Product is selected', product);
+      }
     });
   }
 }

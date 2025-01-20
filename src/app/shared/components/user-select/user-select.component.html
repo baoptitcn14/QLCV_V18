@@ -1,0 +1,23 @@
+<div
+  class="d-flex gap-2 ps-3 align-items-center user-select"
+  (click)="op1.toggle($event)"
+  pTooltip="Click để thay đổi"
+  tooltipPosition="top"
+>
+  <div class="d-flex flex-column gap-1 ps-3">
+    <b class="org-name text-primary">{{ orgName }}</b>
+    <span class="employee-name">{{ fullName }}</span>
+  </div>
+
+  <i class="pi pi-pencil"></i>
+
+  <p-overlayPanel #op1>
+    <app-user-org-select
+      [isOpen]="true"
+      [listUserSelected]="listUserSelected"
+      [selectMode]="'SINGLE'"
+      [isGetNewListOrg]="false"
+      [listOrg]="listOrg"
+    ></app-user-org-select>
+  </p-overlayPanel>
+</div>

@@ -3,25 +3,12 @@
 export class AppConst {
   static readonly authorization = {
     encrptedAuthTokenName: 'enc_auth_token',
-    authToken: 'AuthToken',
+    authToken: 'AuthToken',    
   };
 
-  static readonly listStatus = {
-    list: [
-      {
-        id: 'ACTIVE',
-        name: 'Hoạt động',
-      },
-      {
-        id: 'BLOCK',
-        name: 'Khóa',
-      },
-    ],
-    transformText: {
-      BLOCK: 'Khóa',
-      ACTIVE: 'Hoạt động',
-    },
-  };
+  static readonly idZero = '00000000-0000-0000-0000-000000000000';
+
+  static readonly sharedKey = 'tn_share_key';
 
   static readonly messageToastr = {
     success: {

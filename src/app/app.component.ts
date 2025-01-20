@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 import { TopComponent } from './shared/components/top/top.component';
 import { MenuHorizontalComponent } from './layout/menu-horizontal/menu-horizontal.component';
-import { UserOrgSelectComponent } from './shared/components/user-org-select/user-org-select.component';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,9 @@ import { UserOrgSelectComponent } from './shared/components/user-org-select/user
     RouterOutlet,
     TopComponent,
     MenuHorizontalComponent,
+    ToastModule
   ],
+  providers: [],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

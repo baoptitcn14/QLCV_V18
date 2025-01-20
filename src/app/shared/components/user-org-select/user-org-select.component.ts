@@ -12,14 +12,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import {
-  OrganizationGuidGetDto,
-  OrganizationUserOutputDto,
-  SSO_OrganizationUserServiceProxy,
   SSO_SSOServiceProxy,
   SSOOrganizationDto,
   SSOTypeUserDto,
-  UserDto,
-  ValidationShareKeyDto,
 } from '../../service-proxies/sso-service-proxies';
 import { FormsModule } from '@angular/forms';
 import { InputIconModule } from 'primeng/inputicon';
@@ -28,6 +23,8 @@ import { firstValueFrom } from 'rxjs';
 import _ from 'lodash';
 import { SearchOrgUserPipe } from '../../pipes/search-org-user.pipe';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
+import { InfoDetailUserDto } from '../../service-proxies/qlcv-service-proxies';
 
 @Component({
   selector: 'app-user-org-select',
@@ -90,38 +87,76 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   };
 
   isLoading = true;
-  
+
+  config = {
+    showIconClose: false,
+    showOnlyMeOption: false,
+    basicStyle: true,
+  };
+
   @Input({ required: true }) isOpen = false;
-  @Input({ required: true }) listUserSelected: UserSelect[] = [];
-  @Input() selectMode: 'LOCAL' | 'GLOBAL' = 'GLOBAL';
+  @Input({ required: true }) listUserSelected: InfoDetailUserDto[] = [];
+  @Input() selectMode: 'SINGLE' | 'LOCAL' | 'GLOBAL' = 'GLOBAL';
   @Input() listOrg: ExtendedSSOOrganizationDto[] = [];
+  @Input() usedFor: 'DASHBOARD' | 'TASK' = 'TASK';
+  @Input() isGetNewListOrg = true;
 
   @Output() onSaveEvent = new EventEmitter<UserSelect[]>();
+  @Output() onCloseEvent = new EventEmitter<any>();
 
-  constructor(private ssoServiceProxy: SSO_SSOServiceProxy) {}
+  constructor(
+    private sso_SSOServiceProxy: SSO_SSOServiceProxy,
+    private messageService: MessageService
+  ) {}
   ngOnInit(): void {
-    this.getListOrg()
-      .then(() => {
-        this.initData();
-      })
-      .finally(() => (this.isLoading = false));
-  }
+    this.initConfig();
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['listUserSelected']) {
+    if (this.isGetNewListOrg) {
+      this.getListOrg()
+        .then(() => {
+          this.initData();
+        })
+        .finally(() => (this.isLoading = false));
+    } else {
       this.initData();
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['listUserSelected'] || changes['listOrg']) {
+      this.initData();
+    }
+
+    if (changes['usedFor']) this.initConfig();
+  }
+
+  private initConfig() {
+    if (this.usedFor === 'DASHBOARD') {
+      this.config = {
+        showIconClose: true,
+        showOnlyMeOption: true,
+        basicStyle: false,
+      };
+    }
+
+    if (this.usedFor === 'TASK') {
+      this.config = {
+        showIconClose: false,
+        showOnlyMeOption: false,
+        basicStyle: true,
+      };
+    }
+  }
+
   toggleOrg(org: ExtendedSSOOrganizationDto) {
-    org._isToggle = !org._isToggle;
+    org._isToggled = !org._isToggled;
 
     const filteredListOrg = this.listOrg.filter((item) =>
       _.startsWith(item.code, org.code + '.')
     );
 
     filteredListOrg.forEach((item) => {
-      item._isToggle = org._isToggle;
+      item._isToggled = org._isToggled;
     });
   }
 
@@ -134,6 +169,13 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   onSelectOrg(org: ExtendedSSOOrganizationDto, event: any) {
     // Prevent the click event from propagating to parent elements.
     event.stopPropagation();
+
+    if (this.selectMode == 'SINGLE')
+      return this.messageService.add({
+        severity: 'error',
+        summary: 'Lỗi',
+        detail: 'Chỉ được chọn một nhân viên',
+      });
 
     // Toggle the organization's selected state.
     org._isSelected = !org._isSelected;
@@ -182,12 +224,28 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
         item._isSelected =
           item._totalUserSelected === item._totalUser && item._totalUser > 0;
       });
+    } else if (this.selectMode === 'SINGLE') {
+      const isSelected = !user._isSelected;
+
+      this.listOrg.forEach((item) => {
+        item.listUser!.forEach((u) => {
+          u._isSelected = false;
+        });
+
+        item._totalUserSelected = 0;
+      });
+
+      user._isSelected = isSelected;
     }
   }
 
+  //#region CLOSE
+
   onClose() {
-    
+    this.onCloseEvent.emit();
   }
+
+  //#endregion
 
   //#region SAVE
   onSave() {
@@ -224,28 +282,33 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   private initData() {
     this.listOrg.forEach((org) => {
       if (org.listUser)
-        org.listUser.forEach((user) => ({
-          ...user,
-          _isSelected: this.listUserSelected.some(
-            (item) => item.id === user.key
-          ),
-        }));
+        org.listUser.forEach((user) => {
+          user._isSelected = this.listUserSelected.some((item) =>
+            this.selectMode == 'GLOBAL'
+              ? item.userId == user.key
+              : item.userId == user.key
+          );
+        });
 
       org._filteredListUser = org.listUser;
-      org._isToggle = false;
       org._totalUser = org.listUser!.length || 0;
       org._totalUserSelected = org.listUser!.filter(
         (item) => item._isSelected
       ).length;
       org._isSelected =
         org._totalUserSelected === org._totalUser && org._totalUser > 0;
+
+      org._isToggled =
+        this.selectMode == 'SINGLE' && org._totalUserSelected > 0
+          ? true
+          : false;
     });
   }
 
   private async getListOrg() {
     this.listOrg = _.orderBy(
       (await firstValueFrom(
-        this.ssoServiceProxy.getAll()
+        this.sso_SSOServiceProxy.getAll()
       )) as ExtendedSSOOrganizationDto[],
       ['code', 'name'],
       ['asc', 'asc']
@@ -261,7 +324,7 @@ interface DataFilter {
   search: string;
 }
 
-interface UserSelect extends UserDto {
+export interface UserSelect extends InfoDetailUserDto {
   _isSelected: boolean;
 }
 
@@ -270,7 +333,7 @@ export interface ExtendedSSOOrganizationDto extends SSOOrganizationDto {
   _filteredListUser: ExtendedSSOTypeUserDto[] | undefined;
   _totalUser: number;
   _isSelected: boolean;
-  _isToggle: boolean;
+  _isToggled: boolean;
   _totalUserSelected: number;
 }
 

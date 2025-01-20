@@ -26,10 +26,13 @@ import {
 } from './shared/service-proxies/sso-service-proxies';
 import { ServiceProxiesModule } from './shared/service-proxies/service-proxies.module';
 import { API_QLCV_URL } from './shared/service-proxies/qlcv-service-proxies';
+import { LibServiceModule } from './shared/services/lib-service.module';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(ServiceProxiesModule),
+    importProvidersFrom(LibServiceModule),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideAnimationsAsync(),
@@ -43,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: MHttpInterceptor, multi: true },
     { provide: API_QLCV_URL, useValue: environment.apiQlcv },
     { provide: API_SSO_URL, useValue: environment.apiSSOUrl },
+    MessageService
   ],
 };
 

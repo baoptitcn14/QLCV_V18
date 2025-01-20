@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
+import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-menu-horizontal',
   standalone: true,
-  imports: [MenubarModule],
+  imports: [MenubarModule, TaskDialogComponent, CommonModule],
   templateUrl: './menu-horizontal.component.html',
   styleUrl: './menu-horizontal.component.scss',
 })
@@ -16,22 +18,22 @@ export class MenuHorizontalComponent {
       icon: 'pi pi-home',
       routerLink: '/dashboard',
     },
-    // {
-    //   label: 'Demo',
-    //   icon: 'pi pi-search',
-    //   items: [
-    //     {
-    //       label: 'Form',
-    //       icon: 'pi pi-bolt',
-    //       routerLink: '/demo/form',
-    //     },
-    //     {
-    //       label: 'Dialog',
-    //       icon: 'pi pi-server',
-    //       routerLink: '/demo/dialog',
-    //     },
-    //   ],
-    // },
+    {
+      label: 'Demo',
+      icon: 'pi pi-search',
+      items: [
+        {
+          label: 'Form',
+          icon: 'pi pi-bolt',
+          routerLink: '/demo/form',
+        },
+        {
+          label: 'Dialog',
+          icon: 'pi pi-server',
+          routerLink: '/demo/dialog',
+        },
+      ],
+    },
     {
       label: 'Dữ liệu',
       icon: 'pi pi-database',
@@ -83,7 +85,9 @@ export class MenuHorizontalComponent {
       items: [
         {
           label: 'Công việc',
-          routerLink: '/new/task',
+          command: () => {
+            this.openTaskDialog();
+          },
         },
         {
           label: 'Thông báo',
@@ -96,13 +100,21 @@ export class MenuHorizontalComponent {
         {
           label: 'Báo cáo',
           routerLink: '/new/report',
-        }
-      ]
+        },
+      ],
     },
     {
       label: 'Hỗ trợ sữa lỗi',
       icon: 'pi pi-question',
-      routerLink: '/trouble-shooting'
-    }
+      routerLink: '/trouble-shooting',
+    },
   ];
+
+  visibleTaskDialog = false;
+
+  constructor() {}
+
+  private openTaskDialog() {
+    this.visibleTaskDialog = true;
+  }
 }
