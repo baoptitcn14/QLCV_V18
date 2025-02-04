@@ -1,6 +1,6 @@
 <div
   class="d-flex gap-2 ps-3 align-items-center user-select"
-  (click)="op1.toggle($event)"
+  (click)="op.toggle($event)"
   pTooltip="Click để thay đổi"
   tooltipPosition="top"
 >
@@ -11,13 +11,15 @@
 
   <i class="pi pi-pencil"></i>
 
-  <p-overlayPanel #op1>
+  <p-overlayPanel #op>
     <app-user-org-select
       [isOpen]="true"
       [listUserSelected]="listUserSelected"
       [selectMode]="'SINGLE'"
       [isGetNewListOrg]="false"
       [listOrg]="listOrg"
+      (onUserSelectEvent)="onUserSelectEvent.emit($event)"
+      (onCloseEvent)="op.hide()"
     ></app-user-org-select>
   </p-overlayPanel>
 </div>

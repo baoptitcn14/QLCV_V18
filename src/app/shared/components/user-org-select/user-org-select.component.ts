@@ -23,6 +23,7 @@ import { firstValueFrom } from 'rxjs';
 import _ from 'lodash';
 import { SearchOrgUserPipe } from '../../pipes/search-org-user.pipe';
 import { ButtonModule } from 'primeng/button';
+import { SkeletonModule } from 'primeng/skeleton';
 import { MessageService } from 'primeng/api';
 import { InfoDetailUserDto } from '../../service-proxies/qlcv-service-proxies';
 
@@ -39,6 +40,7 @@ import { InfoDetailUserDto } from '../../service-proxies/qlcv-service-proxies';
     InputTextModule,
     SearchOrgUserPipe,
     ButtonModule,
+    SkeletonModule,
   ],
   templateUrl: './user-org-select.component.html',
   styleUrl: './user-org-select.component.scss',
@@ -92,15 +94,24 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
     showIconClose: false,
     showOnlyMeOption: false,
     basicStyle: true,
+    showButtonFilter: false,
   };
+
+  cloneListOrg: ExtendedSSOOrganizationDto[] = [];
 
   @Input({ required: true }) isOpen = false;
   @Input({ required: true }) listUserSelected: InfoDetailUserDto[] = [];
-  @Input() selectMode: 'SINGLE' | 'LOCAL' | 'GLOBAL' = 'GLOBAL';
+  /*
+    SIGNLE: chỉ được chọn 1 user
+    MUL_LOCAL: được chọn nhiều user, user A trong org B khác user A trong org C
+    MUL_GLOBAL: được chọn nhiều user, user A ( org B ) == user A ( org C )
+  */
+  @Input() selectMode: 'SINGLE' | 'MUL_LOCAL' | 'MUL_GLOBAL' = 'MUL_GLOBAL';
   @Input() listOrg: ExtendedSSOOrganizationDto[] = [];
-  @Input() usedFor: 'DASHBOARD' | 'TASK' = 'TASK';
+  @Input() usedFor: 'DASHBOARD_VIEW' | 'TASK_VIEW' = 'TASK_VIEW';
   @Input() isGetNewListOrg = true;
 
+  @Output() onUserSelectEvent = new EventEmitter<UserOrgSelectEvent>();
   @Output() onSaveEvent = new EventEmitter<UserSelect[]>();
   @Output() onCloseEvent = new EventEmitter<any>();
 
@@ -119,39 +130,47 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
         .finally(() => (this.isLoading = false));
     } else {
       this.initData();
+      this.isLoading = false;
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['listUserSelected'] || changes['listOrg']) {
+    if (changes['listOrg']) {
       this.initData();
     }
 
     if (changes['usedFor']) this.initConfig();
+
+    if (changes['listUserSelected']) this.initData();
   }
 
+  //#region INIT CONFIG
   private initConfig() {
-    if (this.usedFor === 'DASHBOARD') {
+    if (this.usedFor === 'DASHBOARD_VIEW') {
       this.config = {
         showIconClose: true,
         showOnlyMeOption: true,
         basicStyle: false,
+        showButtonFilter: true,
       };
     }
 
-    if (this.usedFor === 'TASK') {
+    if (this.usedFor === 'TASK_VIEW') {
       this.config = {
         showIconClose: false,
         showOnlyMeOption: false,
         basicStyle: true,
+        showButtonFilter: false,
       };
     }
   }
+  //#endregion
 
+  //#region ON TOGGLE ORG
   toggleOrg(org: ExtendedSSOOrganizationDto) {
     org._isToggled = !org._isToggled;
 
-    const filteredListOrg = this.listOrg.filter((item) =>
+    const filteredListOrg = this.cloneListOrg.filter((item) =>
       _.startsWith(item.code, org.code + '.')
     );
 
@@ -159,7 +178,9 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
       item._isToggled = org._isToggled;
     });
   }
+  //#endregion
 
+  //#region ON ORG SELECT
   /**
    * Toggles the selection state of an organization and its users, while preventing event propagation.
    *
@@ -186,7 +207,7 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
 
     org._totalUserSelected = org._isSelected ? org._totalUser : 0;
 
-    const listOrgChild = this.listOrg.filter((item) =>
+    const listOrgChild = this.cloneListOrg.filter((item) =>
       _.startsWith(item.code, org.code + '.')
     );
 
@@ -198,9 +219,19 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
       item._totalUserSelected = item._isSelected ? item._totalUser : 0;
     });
   }
+  //#endregion
 
+  //#region ON USER SELECT
+  /**
+   * Toggles the selection state of a user, updating the parent organization's state accordingly.
+   *
+   * @param user - The user to be selected or deselected.
+   * @param org - The organization that the user belongs to.
+   */
   onSelectUser(user: ExtendedSSOTypeUserDto, org: ExtendedSSOOrganizationDto) {
-    if (this.selectMode === 'LOCAL') {
+    const isSelected = !user._isSelected;
+
+    if (this.selectMode === 'MUL_LOCAL') {
       user._isSelected = !user._isSelected;
 
       org._totalUserSelected = org.listUser!.filter(
@@ -209,8 +240,9 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
 
       org._isSelected =
         org._totalUserSelected === org._totalUser && org._totalUser > 0;
-    } else if (this.selectMode === 'GLOBAL') {
-      this.listOrg.forEach((item) => {
+
+    } else if (this.selectMode === 'MUL_GLOBAL') {
+      this.cloneListOrg.forEach((item) => {
         const u = item.listUser!.find((u) => u.key === user.key);
 
         if (u) {
@@ -225,9 +257,7 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
           item._totalUserSelected === item._totalUser && item._totalUser > 0;
       });
     } else if (this.selectMode === 'SINGLE') {
-      const isSelected = !user._isSelected;
-
-      this.listOrg.forEach((item) => {
+      this.cloneListOrg.forEach((item) => {
         item.listUser!.forEach((u) => {
           u._isSelected = false;
         });
@@ -236,8 +266,24 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
       });
 
       user._isSelected = isSelected;
+      org._totalUserSelected = 1;
+
+      if (isSelected) this.onCloseEvent.emit();
     }
+
+    this.onUserSelectEvent.emit({
+      userInfo: {
+        emailAddress: user.emailAddress,
+        fullName: user.name + ' ' + user.surname,
+        orgName: org.name,
+        userId: Number.parseInt(user.key!),
+        orgId: org.organizationId,
+      } as InfoDetailUserDto,
+      state: isSelected,
+    });
   }
+
+  //#endregion
 
   //#region CLOSE
 
@@ -248,11 +294,11 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   //#endregion
 
   //#region SAVE
-  onSave() {
+  onFilter() {
     let listUserSelected = [] as any[];
 
-    if (this.selectMode === 'LOCAL') {
-      listUserSelected = this.listOrg
+    if (this.selectMode === 'MUL_LOCAL') {
+      listUserSelected = this.cloneListOrg
         .filter((item) => item.listUser!.some((u) => u._isSelected))
         .map((item) =>
           SSOOrganizationDto.fromJS({
@@ -261,8 +307,8 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
           })
         );
       // .flatMap((item) => item.listUser!.filter((u) => u._isSelected));
-    } else if (this.selectMode === 'GLOBAL') {
-      listUserSelected = this.listOrg
+    } else if (this.selectMode === 'MUL_GLOBAL') {
+      listUserSelected = this.cloneListOrg
         .filter((item) => item.listUser?.some((u) => u._isSelected))
         .flatMap((item) => item.listUser!.filter((u) => u._isSelected))
         .reduce((acc: SSOTypeUserDto[], item) => {
@@ -280,16 +326,24 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   //#region PRIVATE METHOD
 
   private initData() {
-    this.listOrg.forEach((org) => {
-      if (org.listUser)
+    this.cloneListOrg =
+      this.cloneListOrg.length > 0
+        ? this.cloneListOrg
+        : _.cloneDeep(this.listOrg);
+
+    this.cloneListOrg.forEach((org) => {
+      if (org.listUser && this.listUserSelected.length > 0)
         org.listUser.forEach((user) => {
-          user._isSelected = this.listUserSelected.some((item) =>
-            this.selectMode == 'GLOBAL'
-              ? item.userId == user.key
-              : item.userId == user.key
-          );
+          user._isSelected = this.listUserSelected.some((item) => {
+            if (item)
+              return this.selectMode == 'MUL_GLOBAL'
+                ? item.userId == user.key
+                : item.userId == user.key && item.orgId == org.organizationId;
+            else return false;
+          });
         });
 
+      org._isToggled = org._isToggled || false;
       org._filteredListUser = org.listUser;
       org._totalUser = org.listUser!.length || 0;
       org._totalUserSelected = org.listUser!.filter(
@@ -301,12 +355,12 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
       org._isToggled =
         this.selectMode == 'SINGLE' && org._totalUserSelected > 0
           ? true
-          : false;
+          : org._isToggled;
     });
   }
 
   private async getListOrg() {
-    this.listOrg = _.orderBy(
+    this.cloneListOrg = _.orderBy(
       (await firstValueFrom(
         this.sso_SSOServiceProxy.getAll()
       )) as ExtendedSSOOrganizationDto[],
@@ -339,4 +393,9 @@ export interface ExtendedSSOOrganizationDto extends SSOOrganizationDto {
 
 export interface ExtendedSSOTypeUserDto extends SSOTypeUserDto {
   _isSelected: boolean;
+}
+
+export interface UserOrgSelectEvent {
+  userInfo: InfoDetailUserDto;
+  state: boolean;
 }

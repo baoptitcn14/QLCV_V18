@@ -85,8 +85,17 @@
       <!-- end search -->
 
       <!-- begin list org -->
-      <div class="list-user-org">
-        @for (org of listOrg | searchOrgUser: { search: dataFilter.search,
+
+      <ng-container *ngIf="isLoading">
+        <div class="d-flex flex-column gap-1">
+          <p-skeleton width="100%" />
+          <p-skeleton width="100%" />
+          <p-skeleton width="100%" />
+        </div>
+      </ng-container>
+
+      <div class="list-user-org" *ngIf="!this.isLoading">
+        @for (org of cloneListOrg | searchOrgUser: { search: dataFilter.search,
         sortOption: dataFilter.sortOption }; track org.organizationId) {
         <div
           class="org-item d-flex align-items-center justify-content-between gap-5"
@@ -156,12 +165,13 @@
   <!-- begin button save -->
 
   <p-button
-    label="Lưu"
-    icon="pi pi-save"
+    *ngIf="config.showButtonFilter"
+    label="Lọc dữ liệu"
+    icon="pi pi-filter"
     [size]="'small'"
     severity="primary"
-    (onClick)="onSave()"
-    [styleClass]="'button-save'"
+    (onClick)="onFilter()"
+    [styleClass]="'button-filter'"
   ></p-button>
 
   <!-- end button save -->

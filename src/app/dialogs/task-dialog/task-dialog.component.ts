@@ -22,7 +22,6 @@ import {
   CongViecGuidGetDto,
   CongViecLog,
   CongViecOutputDto,
-  CongViecOutputDtoPagedResultDto,
   CriteriaRequestDto,
   InfoDetailUserDto,
   Qlcv_CategoryServiceProxy,
@@ -37,6 +36,7 @@ import { AppSessionService } from '../../shared/session/app-session.service';
 import {
   ExtendedSSOOrganizationDto,
   UserOrgSelectComponent,
+  UserOrgSelectEvent,
 } from '../../shared/components/user-org-select/user-org-select.component';
 import {
   SSO_SSOServiceProxy,
@@ -102,6 +102,7 @@ import { UserSelectComponent } from '../../shared/components/user-select/user-se
     InputIconModule,
     TagModule,
     UserSelectComponent,
+    UserOrgSelectComponent,
   ],
   providers: [CategoryHardService],
   templateUrl: './task-dialog.component.html',
@@ -209,10 +210,10 @@ export class TaskDialogComponent implements OnInit {
     { name: 'listNguoiBoPhanGiamSat' },
 
     { name: 'boPhanTao' },
-    { name: 'xuLy' },
+    { name: 'xuLy', validators: ['required'] },
     { name: 'listNguoiBoPhanXuLy' },
 
-    { name: 'duyet' },
+    { name: 'duyet', validators: ['required'] },
     { name: 'listNguoiBoPhanDuyet' },
 
     { name: 'listDoiTuongLienQuan' },
@@ -342,6 +343,11 @@ export class TaskDialogComponent implements OnInit {
       });
   }
 
+  onUserSelect(event: UserOrgSelectEvent, formControlName: string) {
+    if (event.state) this.form!.get(formControlName)?.setValue(event.userInfo);
+    else this.form!.get(formControlName)?.setValue(null);
+  }
+
   get duyet() {
     return this.form!.get('duyet')!.value;
   }
@@ -355,7 +361,6 @@ export class TaskDialogComponent implements OnInit {
   }
 
   onTabChange(event: number) {
-    console.log(event);
     if (event == 1) {
       if (this.taskId && this.form) {
         if (
@@ -368,8 +373,6 @@ export class TaskDialogComponent implements OnInit {
         } else {
           this.getListCongViecCon();
         }
-      } else {
-        this.addForm();
       }
     }
   }
@@ -432,6 +435,7 @@ export class TaskDialogComponent implements OnInit {
   //#region CÔNG VIỆC CON
 
   congViecConParam = {
+    minDate: new Date(),
     valueSearch: '',
     page: {
       skipCount: 0,
@@ -440,7 +444,7 @@ export class TaskDialogComponent implements OnInit {
     },
     configForm: [
       { name: 'id' },
-      { name: 'title' },
+      { name: 'title', validators: ['required'] },
       { name: 'hanHoanThanh', validators: ['required'] },
       { name: 'duyet' },
       { name: 'listNguoiBoPhanDuyet' },
@@ -455,9 +459,13 @@ export class TaskDialogComponent implements OnInit {
     return this.form!.get('listChildren') as FormArray;
   }
 
-  onCreateTask() {}
+  onCreateTask() {
+    if (!this.taskId) {
+      this.onAddTaskChild();
+    }
+  }
 
-  addForm() {
+  onAddTaskChild() {
     if (this.taskId) return;
 
     var congViecConLast = _.last(this.listCongViecCon.controls) as FormGroup;
@@ -477,19 +485,27 @@ export class TaskDialogComponent implements OnInit {
         );
     }
 
-    this.pushFormTaskSub();
+    this.initFormTaskChild();
+
     this.formService.realoadListValidationControl(
       this.form!.get('listChildren') as FormArray,
       'hanHoanThanh'
     );
   }
 
-  removeSubTask(index: number) {
-    (this.form!.get('listChildren') as FormArray).removeAt(index);
-    this.addForm();
+  onDeleteTaskChild(index: number) {
+    this.listCongViecCon.removeAt(index);
   }
 
-  private pushFormTaskSub() {
+  changeValue(key: string, index: number, event: any) {
+    var valueOld = this.listCongViecCon.controls[index].get(key)!.value;
+    if (event.target.value != valueOld)
+      this.listCongViecCon.controls[index]
+        .get(key)!
+        .setValue(event.target.value);
+  }
+
+  private initFormTaskChild() {
     var nguoiBoPhan = this.sso_UtilitService.setInfoDefaulUserOfOrg(
       this.listOrg,
       this.session.userId!
@@ -506,8 +522,8 @@ export class TaskDialogComponent implements OnInit {
         duyet: _.cloneDeep(nguoiBoPhan),
         listNguoiBoPhanDuyet: this.sso_UtilitService.getListNguoiBoPhanDuyet(
           this.listOrg,
-          nguoiBoPhan!.orgId!,
-          nguoiBoPhan!.userId!
+          nguoiBoPhan?.orgId!,
+          nguoiBoPhan?.userId!
         ),
       }
     );
@@ -587,9 +603,62 @@ export class TaskDialogComponent implements OnInit {
   }
   //#endregion
 
-  //#region PRIVATE METHOD
+  //#region ĐỐI TƯỢNG LIÊN QUAN
+  doiTuongLienQuanParam = {
+    listLoaiDoiTuong: [
+      {
+        id: 'THAMKHAO',
+        name: 'Tham khảo',
+      },
+      {
+        id: 'THAMGIATHUCHIEN',
+        name: 'Tham gia thực hiện',
+      },
+    ],
+  };
 
-  //#region setupData
+  get listDoiTuongLienQuan() {
+    return this.form!.get('listDoiTuongLienQuan') as FormArray;
+  }
+
+  onAddRowDoiTuongLienQuan(event: UserOrgSelectEvent) {
+    if (event.state) {
+      let formControl = this.initDoiTuongLienQuanControl();
+
+      this.listDoiTuongLienQuan.controls.push(formControl);
+      formControl.setValue({
+        ...(event.userInfo as any),
+        loaiDoiTuong: 'THAMKHAO',
+        noiDung: '',
+      });
+    } else {
+      const index = this.listDoiTuongLienQuan.controls.findIndex(
+        (f) => f.get('userId')?.value == event.userInfo.userId
+      );
+
+      if (index > -1) this.listDoiTuongLienQuan.removeAt(index);
+    }
+  }
+
+  onDeleteDoiTuongLienQuan(index: number) {
+    this.listDoiTuongLienQuan.removeAt(index);
+  }
+
+  private initDoiTuongLienQuanControl() {
+    return this.fb.group({
+      fullName: '',
+      loaiDoiTuong: ['THAMKHAO', Validators.required],
+      noiDung: '',
+      orgName: '',
+      userId: '',
+      orgId: '',
+      emailAddress: '',
+    });
+  }
+
+  //#endregion
+
+  //#region SETUP DATA
   private setupData(data: any) {
     if (!this.taskId) {
       // xu ly + dinh ky
@@ -602,15 +671,7 @@ export class TaskDialogComponent implements OnInit {
         xuLy: _.cloneDeep(nguoiBoPhan),
         listNguoiBoPhanXuLy: _.cloneDeep(this.listOrg),
         listNguoiBoPhanGiamSat: _.cloneDeep(this.listOrg),
-        listCongViecLienQuan: [],
-        listDoiTuongLienQuan: [],
-        listTieuChi: [],
       });
-
-      // this.form?.get('congViecDinhKy')?.patchValue({
-      //   listNguoiBoPhanXuLyDinhKy: _.cloneDeep(this.listOrg),
-      //   xuLyDinhKy: _.cloneDeep(nguoiBoPhan),
-      // });
 
       // duyet
       this.sso_UtilitService.setNguoiBoPhanDuyet(this.form!, this.listOrg);
@@ -621,105 +682,22 @@ export class TaskDialogComponent implements OnInit {
       if (this.form) {
         this.formService.setupDataForm(this.form!, this.listControlForm, data);
 
-        this.form
-          .get('hanHoanThanh')!
-          .setValue(this.dateTimeService.convertLongToDate(data.hanHoanThanh));
-
-        // set list org cho cac loai
-        this.form
-          .get('listNguoiBoPhanXuLy')!
-          .setValue(_.cloneDeep(this.listOrg));
-        this.form
-          .get('listNguoiBoPhanGiamSat')!
-          .setValue(_.cloneDeep(this.listOrg));
-        this.form
-          .get('listNguoiBoPhanDuyet')!
-          .setValue(
-            this.sso_UtilitService.getListNguoiBoPhanDuyet(
-              _.cloneDeep(this.listOrg),
-              data.xuLy.orgId,
-              data.xuLy.userId
-            )
-          );
-
-        this.form!.get('value9')!.setValue(data.value9);
-        this.form!.get('tags')!.setValue(data.tags);
-        this.form
-          .get('listDoiTuongLienQuan')!
-          .setValue(data.listDoiTuongLienQuan ? data.listDoiTuongLienQuan : []);
-        this.form
-          .get('listTieuChi')!
-          .setValue(data.listTieuChi ? data.listTieuChi : []);
-        this.form!.get('listCongViecLienQuan')!.setValue([]);
-
-        this.form!.get('listFile')!.setValue(
-          data.listFile ? data.listFile : []
-        );
-
-        this.form!.get('listValueChild')!.setValue(data.listChildren);
-        this.form!.get('content')!.setValue(data.content);
-
-        this.form!.get('listDuyet')!.setValue(data.listDuyet);
-
-        this.form!.get('dataReference')!.setValue(data.dataReference);
-
-        /* #region  set dinh ky */
-        if (data.congViecDinhKy) {
-          this.utService.convertUndefinedToNull(data.congViecDinhKy.xuLyDinhKy);
-          this.form
-            .get('congViecDinhKy')!
-            .get('isActive')!
-            .setValue(data.congViecDinhKy.isActive);
-          this.form
-            .get('congViecDinhKy')!
-            .get('loaiDinhKy')!
-            .setValue(data.congViecDinhKy.loaiDinhKy);
-          this.form
-            .get('congViecDinhKy')!
-            .get('stopFrom')!
-            .setValue(
-              data.congViecDinhKy.stopFrom
-                ? this.dateTimeService.convertLongToDate(
-                    data.congViecDinhKy.stopFrom
-                  )
-                : undefined
-            );
-          this.form
-            .get('congViecDinhKy')!
-            .get('stopTo')!
-            .setValue(
-              data.congViecDinhKy.stopTo
-                ? this.dateTimeService.convertLongToDate(
-                    data.congViecDinhKy.stopTo
-                  )
-                : undefined
-            );
-          this.form
-            .get('congViecDinhKy')!
-            .get('value')!
-            .setValue(data.congViecDinhKy.value);
-          this.formService.setValue(
-            this.form!.get('congViecDinhKy') as FormGroup,
-            'xuLyDinhKy',
-            _.cloneDeep(data.congViecDinhKy.xuLyDinhKy)
-          );
-        } else {
-          var nguoiBoPhan = this.sso_UtilitService.setInfoDefaulUserOfOrg(
-            this.listOrg,
-            this.session.userId!
-          );
-          this.formService.setValue(
-            this.form!.get('congViecDinhKy') as FormGroup,
-            'xuLyDinhKy',
-            _.cloneDeep(nguoiBoPhan)
-          );
-        }
-        this.formService.setValue(
-          this.form!.get('congViecDinhKy') as FormGroup,
-          'listNguoiBoPhanXuLyDinhKy',
-          _.cloneDeep(this.listOrg)
-        );
-        /* #endregion */
+        this.form.patchValue({
+          ...data,
+          hanHoanThanh: this.dateTimeService.convertLongToDate(
+            data.hanHoanThanh
+          ),
+          listNguoiBoPhanXuLy: _.cloneDeep(this.listOrg),
+          listNguoiBoPhanGiamSat: _.cloneDeep(this.listOrg),
+          listNguoiBoPhanDuyet: this.sso_UtilitService.getListNguoiBoPhanDuyet(
+            _.cloneDeep(this.listOrg),
+            data.xuLy.orgId,
+            data.xuLy.userId
+          ),
+          listDoiTuongLienQuan: data.listDoiTuongLienQuan || [],
+          listTieuChi: data.listTieuChi || [],
+          listValueChild: data.listChildren,
+        });
 
         if (data.value6) {
           this.document = JSON.parse(data.value6) as any;
@@ -731,27 +709,27 @@ export class TaskDialogComponent implements OnInit {
             this.document.hanHoanThanh = this.dateTimeService.convertLongToDate(
               data.hanHoanThanh
             );
-            try {
-              this.utService.convertUndefinedToNull(
-                this.document.congViecDinhKy.xuLyDinhKy
-              );
-              this.document.congViecDinhKy.stopFrom = this.document
-                .congViecDinhKy.stopFrom
-                ? this.dateTimeService.convertLongToDate(
-                    this.document.congViecDinhKy.stopFrom
-                  )
-                : undefined;
-              this.document.congViecDinhKy.stopTo = this.document.congViecDinhKy
-                .stopTo
-                ? this.dateTimeService.convertLongToDate(
-                    this.document.congViecDinhKy.stopTo
-                  )
-                : undefined;
-            } catch {
-              this.document.congViecDinhKy = _.cloneDeep(
-                this.form!.value.congViecDinhKy
-              );
-            }
+            // try {
+            //   this.utService.convertUndefinedToNull(
+            //     this.document.congViecDinhKy.xuLyDinhKy
+            //   );
+            //   this.document.congViecDinhKy.stopFrom = this.document
+            //     .congViecDinhKy.stopFrom
+            //     ? this.dateTimeService.convertLongToDate(
+            //         this.document.congViecDinhKy.stopFrom
+            //       )
+            //     : undefined;
+            //   this.document.congViecDinhKy.stopTo = this.document.congViecDinhKy
+            //     .stopTo
+            //     ? this.dateTimeService.convertLongToDate(
+            //         this.document.congViecDinhKy.stopTo
+            //       )
+            //     : undefined;
+            // } catch {
+            //   this.document.congViecDinhKy = _.cloneDeep(
+            //     this.form!.value.congViecDinhKy
+            //   );
+            // }
           }
         }
       }
@@ -760,29 +738,29 @@ export class TaskDialogComponent implements OnInit {
   }
   // #endregion
 
-  //#region init form
+  //#region INIT FORM
   private initForm() {
     let form = this.fb.group({
       parentId: this.parentId,
       id: AppConst.idZero,
       doBaoMat: 1,
       doUuTien: 1,
-      hanHoanThanh: new Date(),
+      hanHoanThanh: [new Date(), [Validators.required]],
       thoiGianThucHien: 1,
       number1: 0,
       number2: 0,
-      nguoiXuLyId: this.session.userId!,
-      nguoiDuyetId: this.session.userId!,
+      nguoiXuLyId: [this.session.userId!, Validators.required],
+      nguoiDuyetId: [this.session.userId!, Validators.required],
       listFile: [],
       tags: '[]',
       content: '',
-      value2: 'D',
+      value2: ['D', Validators.required],
       value3: this.groupCode,
       listTieuChi: [],
       listPermission: [BtnActionBusiness.LUU],
-      title: '',
+      title: ['', Validators.required],
       tongThoiGianChiDinhViecCon: 0,
-      loaiCongViecId: '',
+      loaiCongViecId: ['', Validators.required],
       creationTime: new Date(),
       time: new FormControl('01:23'),
       dataReference: '',
@@ -803,13 +781,13 @@ export class TaskDialogComponent implements OnInit {
         listNguoiBoPhanXuLyDinhKy: [],
       }),
       listChildren: this.fb.array([]),
-      xuLy: null,
-      duyet: null,
+      xuLy: [null, Validators.required],
+      duyet: [null, Validators.required],
       giamSat: null,
       listNguoiBoPhanXuLy: [],
       listNguoiBoPhanGiamSat: [],
       listCongViecLienQuan: [],
-      listDoiTuongLienQuan: [],
+      listDoiTuongLienQuan: this.fb.array([]),
       listNguoiBoPhanDuyet: [],
     });
 
@@ -825,6 +803,7 @@ export class TaskDialogComponent implements OnInit {
   }
   //#endregion
 
+  //#region PRIVATE METHOD
   private getTaskById() {
     const input = new ShareKeyByIdDto();
     input.id = this.taskId;

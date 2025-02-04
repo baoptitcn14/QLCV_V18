@@ -128,6 +128,8 @@
                         [style]="{ width: '100%' }"
                         [dateFormat]="'dd/mm/yy'"
                         [readonlyInput]="true"
+                        [showTime]="true"
+                        [minDate]="congViecConParam.minDate"
                         variant="filled"
                       />
                     </div>
@@ -265,12 +267,11 @@
               <div class="d-flex flex-column gap-3">
                 <label>Nguời xử lý</label>
                 <app-user-select
-                  [fullName]="xuLy.fullName"
-                  [orgName]="xuLy.orgName"
-                  [listUserSelected]="
-                    this.form!.get('listNguoiBoPhanXuLy')!.value
-                  "
-                  [listOrg]="listOrg"
+                  [fullName]="xuLy?.fullName"
+                  [orgName]="xuLy?.orgName"
+                  [listUserSelected]="[this.form!.get('xuLy')!.value]"
+                  [listOrg]="this.form!.get('listNguoiBoPhanXuLy')!.value"
+                  (onUserSelectEvent)="onUserSelect($event, 'xuLy')"
                 ></app-user-select>
               </div>
             </div>
@@ -281,12 +282,11 @@
               <div class="d-flex flex-column gap-3">
                 <label>Nguời duyệt</label>
                 <app-user-select
-                  [fullName]="duyet.fullName"
-                  [orgName]="duyet.orgName"
-                  [listUserSelected]="
-                    this.form!.get('listNguoiBoPhanDuyet')!.value
-                  "
-                  [listOrg]="listOrg"
+                  [fullName]="duyet?.fullName"
+                  [orgName]="duyet?.orgName"
+                  [listUserSelected]="[this.form!.get('duyet')!.value]"
+                  [listOrg]="this.form!.get('listNguoiBoPhanDuyet')!.value"
+                  (onUserSelectEvent)="onUserSelect($event, 'duyet')"
                 ></app-user-select>
               </div>
             </div>
@@ -299,36 +299,10 @@
                 <app-user-select
                   [fullName]="giamSat?.fullName"
                   [orgName]="giamSat?.orgName"
-                  [listUserSelected]="
-                    this.form!.get('listNguoiBoPhanGiamSat')!.value
-                  "
-                  [listOrg]="listOrg"
+                  [listUserSelected]="[this.form!.get('giamSat')!.value]"
+                  [listOrg]="this.form!.get('listNguoiBoPhanGiamSat')!.value"
+                  (onUserSelectEvent)="onUserSelect($event, 'giamSat')"
                 ></app-user-select>
-                <!-- <div
-                  class="d-flex gap-2 ps-3 align-items-center user-select"
-                  (click)="op3.toggle($event)"
-                  pTooltip="Click để thay đổi"
-                  tooltipPosition="top"
-                >
-                  <div class="d-flex flex-column gap-1 ps-3">
-                    <b class="org-name text-primary">{{ giamSat?.orgName }}</b>
-                    <span class="employee-name">{{ giamSat?.fullName }}</span>
-                  </div>
-
-                  <i class="pi pi-pencil"></i>
-
-                  <p-overlayPanel #op3>
-                    <app-user-org-select
-                      [isOpen]="true"
-                      [listUserSelected]="
-                        this.form.get('listNguoiBoPhanGiamSat')!.value
-                      "
-                      [selectMode]="'SINGLE'"
-                      [isGetNewListOrg]="false"
-                      [listOrg]="listOrg"
-                    ></app-user-org-select>
-                  </p-overlayPanel>
-                </div> -->
               </div>
             </div>
             <!-- end người giám sát -->
@@ -353,8 +327,8 @@
   </ng-container>
   <ng-template pTemplate="footer">
     <dialog-footer
-      [isNew]="true"
-      [isValid]="true"
+      [isNew]="!this.taskId"
+      [isValid]="this.form!.valid"
       (onCloseEvent)="onHide()"
       (onSaveEvent)="onSave()"
     ></dialog-footer>
@@ -493,11 +467,11 @@
                 icon="pi pi-plus"
                 severity="success"
                 [size]="'small'"
-                *ngIf="taskId"
                 (onClick)="onCreateTask()"
               ></p-button>
             </div>
           </ng-template>
+
           <ng-template pTemplate="header" let-columns>
             <tr>
               <th class="text-center" [width]="40">#</th>
@@ -565,6 +539,7 @@
                   formControlName="title"
                   variant="filled"
                   class="p-inputtext-sm w-100"
+                  (blur)="changeValue('title', i, $event)"
                 />
               </td>
               <td>
@@ -591,6 +566,8 @@
                 <p-calendar
                   formControlName="hanHoanThanh"
                   [maxDate]="form?.get('hanHoanThanh')?.value"
+                  [minDate]="congViecConParam.minDate"
+                  [readonlyInput]="true"
                   variant="filled"
                   class="p-inputtext-sm w-100"
                   styleClass="w-100"
@@ -604,6 +581,7 @@
                   severity="danger"
                   [size]="'small'"
                   pTooltip="Xóa"
+                  (onClick)="onDeleteTaskChild(i)"
                 ></p-button>
               </td>
             </tr>
@@ -623,7 +601,114 @@
         </div>
       </ng-template>
       <ng-template pTemplate="content">
-        Complex Content to Lazy Load
+        <p-table
+          #dt3
+          [value]="listDoiTuongLienQuan.controls"
+          responsiveLayout="stack"
+          [globalFilterFields]="['title']"
+          [breakpoint]="'960px'"
+          [styleClass]="
+            'p-datatable-sm p-datatable-gridlines p-datatable-striped'
+          "
+          [tableStyle]="{ 'min-width': '50rem' }"
+        >
+          <ng-template pTemplate="caption">
+            <div
+              class="d-flex align-items-center justify-content-between gap-3"
+            >
+              <p-iconField iconPosition="left" class="ml-auto">
+                <p-inputIcon>
+                  <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input
+                  #st3
+                  pInputText
+                  type="text"
+                  class="p-inputtext-sm"
+                  (input)="dt3.filterGlobal(st3!.value, 'contains')"
+                  placeholder="Nhập tên đối tượng"
+                />
+              </p-iconField>
+
+              <p-button
+                label="Thêm mới"
+                icon="pi pi-plus"
+                severity="success"
+                [size]="'small'"
+                (onClick)="op.toggle($event)"
+              >
+                <p-overlayPanel #op>
+                  <app-user-org-select
+                    [isOpen]="true"
+                    [listUserSelected]="listDoiTuongLienQuan.value"
+                    [selectMode]="'MUL_LOCAL'"
+                    [isGetNewListOrg]="false"
+                    [listOrg]="listOrg"
+                    (onUserSelectEvent)="onAddRowDoiTuongLienQuan($event)"
+                  ></app-user-org-select>
+                </p-overlayPanel>
+              </p-button>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class="text-center" [width]="40">#</th>
+              <th>Đối tượng</th>
+              <th>Liên quan</th>
+              <th>Nội dung</th>
+              <th [width]="60"></th>
+            </tr>
+          </ng-template>
+
+          <ng-template
+            pTemplate="body"
+            let-doiTuong
+            let-i="rowIndex"
+            let-columns="columns"
+          >
+            <tr [formGroup]="doiTuong">
+              <td class="text-center">{{ i + 1 }}</td>
+              <td>
+                <span>
+                  {{ doiTuong.get("fullName")?.value }}
+                </span>
+                <span class="text-primary">
+                  - {{ doiTuong.get("orgName")?.value }}
+                </span>
+              </td>
+              <td>
+                <p-dropdown
+                  [variant]="'filled'"
+                  [options]="doiTuongLienQuanParam.listLoaiDoiTuong"
+                  formControlName="loaiDoiTuong"
+                  optionLabel="name"
+                  optionValue="id"
+                  [appendTo]="'body'"
+                  [styleClass]="'w-100'"
+                ></p-dropdown>
+              </td>
+              <td>
+                <input
+                  pInputText
+                  formControlName="noiDung"
+                  variant="filled"
+                  class="p-inputtext-sm w-100"
+                />
+              </td>
+              <td class="text-center">
+                <p-button
+                  icon="pi pi-trash"
+                  outlined="true"
+                  severity="danger"
+                  [size]="'small'"
+                  pTooltip="Xóa"
+                  (onClick)="onDeleteDoiTuongLienQuan(i)"
+                ></p-button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </ng-template>
     </p-tabPanel>
     <!-- #end region -->

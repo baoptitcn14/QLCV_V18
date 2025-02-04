@@ -6,13 +6,14 @@
     min-height: 40px;
 
     .pi {
-        display: none;
+        display: block;
+        visibility: hidden;
         font-size: 1.2rem;
     }
 
     &:hover {
         .pi {
-            display: block;
+            visibility: visible;
             transition: all 0.3s;
         }
     }
