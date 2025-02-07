@@ -547,7 +547,7 @@ export class FormComponent implements OnInit {
       cssClass: 'col-12 col-md-12',
       label: 'File upload',
       order: 3,
-      value: [],
+      value: null,
       required: true,
     },
   ];

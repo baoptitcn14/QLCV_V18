@@ -75,7 +75,7 @@ export class MFilesComponent implements Validator, ControlValueAccessor {
     return this.errors ? this.errors : null;
   }
   writeValue(obj: any): void {
-    this.value = obj;
+    this.value = !obj ? [] : obj;
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

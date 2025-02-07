@@ -358,7 +358,6 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   //#region PRIVATE METHOD
 
   private initData() {
-    console.log('init data: ', this.listUserSelected);
     this.cloneListOrg =
       this.cloneListOrg.length > 0
         ? this.cloneListOrg

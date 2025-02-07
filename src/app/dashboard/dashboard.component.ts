@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit {
     // $('#dashboard-table').scrollTop(0);
     var test = this._spService.getDataTest()
     this._dashboardService.setupData(this.listGroup,test,this.setting.value)
-    console.log(this.listGroup)
+    // console.log(this.listGroup)
      
   }
 }

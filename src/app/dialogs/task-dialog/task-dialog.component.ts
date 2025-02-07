@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { DialogFooterComponent } from '../../shared/dialog-partials/dialog-footer/dialog-footer.component';
 import { ButtonModule } from 'primeng/button';
@@ -60,7 +70,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TabViewModule } from 'primeng/tabview';
 import { FieldsetModule } from 'primeng/fieldset';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AppConst } from '../../shared/app-const';
 import { BtnActionBusiness } from '../../shared/button-actions-const';
 import { ValidatorsService } from '../../shared/services/validators.service';
@@ -76,6 +86,7 @@ import { TagModule } from 'primeng/tag';
 import { UserSelectComponent } from '../../shared/components/user-select/user-select.component';
 import { DialogFooterDirective } from '../../shared/directives/dialog-footer.directive';
 import { DialogHeaderDirective } from '../../shared/directives/dialog-header.directive';
+import { MFilesComponent } from '../../dynamic-form/m-files/m-files.component';
 
 @Component({
   selector: 'app-task-dialog',
@@ -107,7 +118,8 @@ import { DialogHeaderDirective } from '../../shared/directives/dialog-header.dir
     UserSelectComponent,
     UserOrgSelectComponent,
     DialogFooterDirective,
-    DialogHeaderDirective
+    DialogHeaderDirective,
+    MFilesComponent
   ],
   providers: [CategoryHardService],
   templateUrl: './task-dialog.component.html',
@@ -162,7 +174,7 @@ export class TaskDialogComponent implements OnInit {
   ];
 
   title = 'Thêm công việc mới';
-  
+
   filteredParentTasks: SearchCongViecExtends[] = [];
   listLoaiCongViec: CategoryOutputDto[] = [];
   listDonViThucHien = [
@@ -176,24 +188,24 @@ export class TaskDialogComponent implements OnInit {
     },
   ];
   listOrg: ExtendedSSOOrganizationDto[] = [];
-  list: InfoDetailUserDto[] = [
-    {
-      emailAddress: 'tienln@ilearn.net.vn',
-      userId: 232,
-      name: null,
-      surname: null,
-      fullName: 'Tiến Lê Nhật',
-      orgId: 'fdb84251-a1b2-1201-aabf-387c0f089806',
-      orgName: 'ILEARN',
-      action: null,
-      message: null,
-      creationTime: null,
-      isNew: null,
-      isRelate: null,
-      search: null,
-      status: null,
-    },
-  ].map((item) => InfoDetailUserDto.fromJS(item));
+  // list: InfoDetailUserDto[] = [
+  //   {
+  //     emailAddress: 'tienln@ilearn.net.vn',
+  //     userId: 232,
+  //     name: null,
+  //     surname: null,
+  //     fullName: 'Tiến Lê Nhật',
+  //     orgId: 'fdb84251-a1b2-1201-aabf-387c0f089806',
+  //     orgName: 'ILEARN',
+  //     action: null,
+  //     message: null,
+  //     creationTime: null,
+  //     isNew: null,
+  //     isRelate: null,
+  //     search: null,
+  //     status: null,
+  //   },
+  // ].map((item) => InfoDetailUserDto.fromJS(item));
   listCongViecLog: CongViecLog[] = [];
 
   form: FormGroup | undefined;
@@ -306,6 +318,7 @@ export class TaskDialogComponent implements OnInit {
     }
   }
 
+  //#region FILTER PARENT TASK API
   /**
    * Filters the parent tasks based on the user's input in the autocomplete field.
    * @param event - The AutoCompleteCompleteEvent containing the user's query.
@@ -349,6 +362,7 @@ export class TaskDialogComponent implements OnInit {
         );
       });
   }
+  // #endregion
 
   onUserSelect(event: UserOrgSelectEvent, formControlName: string) {
     if (event.state) this.form!.get(formControlName)?.setValue(event.userInfo);
@@ -398,9 +412,7 @@ export class TaskDialogComponent implements OnInit {
         '960px': '75vw',
         '640px': '90vw',
       },
-      closeOnEscape: false,
       styleClass: 'p-dialog-custom tieu-chi-dialog',
-      
     });
 
     dialogRef.onClose.subscribe((res) => {
@@ -420,7 +432,7 @@ export class TaskDialogComponent implements OnInit {
         '960px': '75vw',
         '640px': '90vw',
       },
-      styleClass: 'p-dialog-custom',
+      styleClass: 'p-dialog-custom tieu-chi-dialog',
       data: {
         tieuChi: tieuChi,
       },
@@ -508,6 +520,7 @@ export class TaskDialogComponent implements OnInit {
         .setValue(event.target.value);
   }
 
+  //#region init form cong viec con
   private initFormTaskChild() {
     var nguoiBoPhan = this.sso_UtilitService.setInfoDefaulUserOfOrg(
       this.listOrg,
@@ -544,7 +557,9 @@ export class TaskDialogComponent implements OnInit {
       }, 100);
     });
   }
+  //#endregion
 
+  //#region get list cong viec con
   private getListCongViecCon() {
     /**
      * Get list công việc con
@@ -587,7 +602,9 @@ export class TaskDialogComponent implements OnInit {
       });
     }
   }
+  //#endregion
 
+  //#region setup data cong viec con
   private setupDataCongViecCon(data: CongViecOutputExtend[]) {
     _.each(data, (congViecCon) => {
       const status = this.categoryHardService.listStatusBusiness.find(
@@ -604,6 +621,8 @@ export class TaskDialogComponent implements OnInit {
       (this.form!.get('listChildren') as FormArray).push(formCongViecCon);
     });
   }
+  //#endregion
+
   //#endregion
 
   //#region ĐỐI TƯỢNG LIÊN QUAN
@@ -687,6 +706,7 @@ export class TaskDialogComponent implements OnInit {
         xuLy: _.cloneDeep(nguoiBoPhan),
         listNguoiBoPhanXuLy: _.cloneDeep(this.listOrg),
         listNguoiBoPhanGiamSat: _.cloneDeep(this.listOrg),
+        listTieuChi: []
       });
 
       // duyet
@@ -910,7 +930,9 @@ export class TaskDialogComponent implements OnInit {
     this.onHideEvent.emit();
   }
 
-  onSave() {}
+  onSave() {
+    console.log(this.form)
+  }
 }
 
 interface CongViecLogExtend extends CongViecLog {

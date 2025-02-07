@@ -20,7 +20,7 @@
       />
     </span>
 
-    <span class="list-file d-flex" *ngIf="!hiddenListFile && value.length > 0">
+    <span class="list-file d-flex" *ngIf="!hiddenListFile && value?.length > 0">
       <a
         [href]="f.fileUrl ? f.fileUrl : f._url"
         target="_blank"

@@ -63,11 +63,11 @@ export class TieuChiDialogComponent implements OnInit {
       });
 
       this.tieuChi.listThongSo?.forEach((item) => {
-        this.listThongSo.controls.push(new FormControl(item));
+        this.listThongSo.push(new FormControl(item));
       });
     }
 
-    this.listThongSo.controls.push(new FormControl(''));
+    this.listThongSo.push(new FormControl(''));
   }
 
   get listThongSo() {
@@ -94,7 +94,7 @@ export class TieuChiDialogComponent implements OnInit {
   onAddThongSo() {
     this.listThongSo.push(new FormControl(''));
   }
-
+ 
   onHide() {
     this.ref.close();
   }
