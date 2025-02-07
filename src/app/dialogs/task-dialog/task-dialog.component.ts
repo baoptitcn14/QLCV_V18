@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { DialogFooterComponent } from '../../shared/dialog-partials/dialog-footer/dialog-footer.component';
 import { ButtonModule } from 'primeng/button';
@@ -35,6 +35,7 @@ import {
 import { AppSessionService } from '../../shared/session/app-session.service';
 import {
   ExtendedSSOOrganizationDto,
+  OrgSelectEvent,
   UserOrgSelectComponent,
   UserOrgSelectEvent,
 } from '../../shared/components/user-org-select/user-org-select.component';
@@ -73,6 +74,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { TieuChiDialogComponent } from '../tieu-chi-dialog/tieu-chi-dialog.component';
 import { TagModule } from 'primeng/tag';
 import { UserSelectComponent } from '../../shared/components/user-select/user-select.component';
+import { DialogFooterDirective } from '../../shared/directives/dialog-footer.directive';
+import { DialogHeaderDirective } from '../../shared/directives/dialog-header.directive';
 
 @Component({
   selector: 'app-task-dialog',
@@ -103,19 +106,20 @@ import { UserSelectComponent } from '../../shared/components/user-select/user-se
     TagModule,
     UserSelectComponent,
     UserOrgSelectComponent,
+    DialogFooterDirective,
+    DialogHeaderDirective
   ],
   providers: [CategoryHardService],
   templateUrl: './task-dialog.component.html',
   styleUrl: './task-dialog.component.scss',
 })
 export class TaskDialogComponent implements OnInit {
-  @Input({ required: true }) visible = false;
+  @Input({ required: true }) visible = true;
   @Input() taskId: string | undefined;
   @Input() parentId: string | undefined;
   @Input('groupCode') groupCode: string | undefined;
   @Output() onHideEvent = new EventEmitter();
 
-  title = 'Thêm công việc mới';
   controlOpenUserSelect = {
     nguoiXuLy: false,
     nguoiGiamSat: false,
@@ -156,6 +160,9 @@ export class TaskDialogComponent implements OnInit {
       },
     },
   ];
+
+  title = 'Thêm công việc mới';
+  
   filteredParentTasks: SearchCongViecExtends[] = [];
   listLoaiCongViec: CategoryOutputDto[] = [];
   listDonViThucHien = [
@@ -392,14 +399,13 @@ export class TaskDialogComponent implements OnInit {
         '640px': '90vw',
       },
       closeOnEscape: false,
-      styleClass: 'p-dialog-custom',
-      maximizable: true,
+      styleClass: 'p-dialog-custom tieu-chi-dialog',
+      
     });
 
     dialogRef.onClose.subscribe((res) => {
       if (res) {
         this.form?.get('listTieuChi')?.patchValue([...this.listTieuChi, res]);
-        console.log(this.form);
       }
     });
   }
@@ -415,7 +421,6 @@ export class TaskDialogComponent implements OnInit {
         '640px': '90vw',
       },
       styleClass: 'p-dialog-custom',
-      maximizable: true,
       data: {
         tieuChi: tieuChi,
       },
@@ -423,9 +428,7 @@ export class TaskDialogComponent implements OnInit {
 
     dialogRef.onClose.subscribe((res) => {
       if (res) {
-        // this.form?.get('listTieuChi')?.patchValue([...this.listTieuChi, res]);
         this.listTieuChi.splice(index, 1, res);
-        console.log(this.form);
       }
     });
   }
@@ -622,22 +625,35 @@ export class TaskDialogComponent implements OnInit {
   }
 
   onAddRowDoiTuongLienQuan(event: UserOrgSelectEvent) {
+    const index = this.listDoiTuongLienQuan.controls.findIndex(
+      (f) =>
+        f.get('userId')?.value == event.userInfo.userId &&
+        f.get('orgId')?.value == event.userInfo.orgId
+    );
+
     if (event.state) {
-      let formControl = this.initDoiTuongLienQuanControl();
+      if (index < 0) {
+        let formControl = this.initDoiTuongLienQuanControl();
 
-      this.listDoiTuongLienQuan.controls.push(formControl);
-      formControl.setValue({
-        ...(event.userInfo as any),
-        loaiDoiTuong: 'THAMKHAO',
-        noiDung: '',
-      });
+        this.listDoiTuongLienQuan.controls.push(formControl);
+        formControl.setValue({
+          ...(event.userInfo as any),
+          loaiDoiTuong: 'THAMKHAO',
+          noiDung: '',
+        });
+      }
     } else {
-      const index = this.listDoiTuongLienQuan.controls.findIndex(
-        (f) => f.get('userId')?.value == event.userInfo.userId
-      );
-
       if (index > -1) this.listDoiTuongLienQuan.removeAt(index);
     }
+  }
+
+  onSelectOrgEvent(event: OrgSelectEvent) {
+    event.listUserInfo.forEach((userInfo) => {
+      this.onAddRowDoiTuongLienQuan({
+        state: event.state,
+        userInfo: userInfo,
+      });
+    });
   }
 
   onDeleteDoiTuongLienQuan(index: number) {

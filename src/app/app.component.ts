@@ -12,7 +12,7 @@ import { ToastModule } from 'primeng/toast';
     RouterOutlet,
     TopComponent,
     MenuHorizontalComponent,
-    ToastModule
+    ToastModule,
   ],
   providers: [],
   templateUrl: './app.component.html',

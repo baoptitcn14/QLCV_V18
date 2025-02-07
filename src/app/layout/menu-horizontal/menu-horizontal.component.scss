@@ -1,18 +1,20 @@
 ::ng-deep {
-    p-menubarsub {
-        width: 100%;
-        #menu-horizontal {
-            justify-content: center;
+    app-menu-horizontal {
+        p-menubarsub {
+            width: 100%;
+            #menu-horizontal {
+                justify-content: center;
 
-            .p-menuitem-link {
-                &.p-menuitem-link-active {
-                    color: #4b5563;
-                    background: #e9f0fd;
-                    border-radius: 6px;
+                .p-menuitem-link {
+                    &.p-menuitem-link-active {
+                        color: #4b5563;
+                        background: #e9f0fd;
+                        border-radius: 6px;
+                    }
                 }
-            }
-            .p-menuitem-icon {
-                font-weight: bold;
+                .p-menuitem-icon {
+                    font-weight: bold;
+                }
             }
         }
     }

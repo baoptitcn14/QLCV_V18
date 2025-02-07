@@ -15,6 +15,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogFooterDirective } from '../../shared/directives/dialog-footer.directive';
 
 @Component({
   selector: 'app-tieu-chi-dialog',
@@ -27,6 +28,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ConfirmPopupModule,
     TooltipModule,
     FormsModule,
+    DialogFooterDirective
   ],
   providers: [ConfirmationService],
   templateUrl: './tieu-chi-dialog.component.html',

@@ -13,6 +13,7 @@ import { TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-category',
@@ -23,6 +24,7 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     TagModule,
     InputTextModule,
+    OverlayPanelModule
   ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',

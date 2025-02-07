@@ -112,7 +112,8 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   @Input() isGetNewListOrg = true;
 
   @Output() onUserSelectEvent = new EventEmitter<UserOrgSelectEvent>();
-  @Output() onSaveEvent = new EventEmitter<UserSelect[]>();
+  @Output() onOrgSelectEvent = new EventEmitter<OrgSelectEvent>();
+  @Output() onSaveEvent = new EventEmitter<SSOOrganizationDto[]>();
   @Output() onCloseEvent = new EventEmitter<any>();
 
   constructor(
@@ -218,6 +219,34 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
       });
       item._totalUserSelected = item._isSelected ? item._totalUser : 0;
     });
+
+    this.onOrgSelectEvent.emit({
+      listUserInfo: [
+        ...(org.listUser?.map(
+          (user) =>
+            ({
+              emailAddress: user.emailAddress,
+              fullName: user.name + ' ' + user.surname,
+              orgName: org.name,
+              userId: Number.parseInt(user.key!),
+              orgId: org.organizationId,
+            } as InfoDetailUserDto)
+        ) || []),
+        ...listOrgChild.flatMap(
+          (item) =>
+            item.listUser?.map((user) => {
+              return {
+                emailAddress: user.emailAddress,
+                fullName: user.name + ' ' + user.surname,
+                orgName: item.name,
+                userId: Number.parseInt(user.key!),
+                orgId: item.organizationId,
+              } as InfoDetailUserDto;
+            }) || []
+        ),
+      ],
+      state: org._isSelected,
+    });
   }
   //#endregion
 
@@ -240,7 +269,6 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
 
       org._isSelected =
         org._totalUserSelected === org._totalUser && org._totalUser > 0;
-
     } else if (this.selectMode === 'MUL_GLOBAL') {
       this.cloneListOrg.forEach((item) => {
         const u = item.listUser!.find((u) => u.key === user.key);
@@ -294,11 +322,12 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   //#endregion
 
   //#region SAVE
-  onFilter() {
-    let listUserSelected = [] as any[];
+
+  private getListOrgUserSelected() {
+    let listOrgUserSelected = [] as SSOOrganizationDto[];
 
     if (this.selectMode === 'MUL_LOCAL') {
-      listUserSelected = this.cloneListOrg
+      listOrgUserSelected = this.cloneListOrg
         .filter((item) => item.listUser!.some((u) => u._isSelected))
         .map((item) =>
           SSOOrganizationDto.fromJS({
@@ -308,7 +337,7 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
         );
       // .flatMap((item) => item.listUser!.filter((u) => u._isSelected));
     } else if (this.selectMode === 'MUL_GLOBAL') {
-      listUserSelected = this.cloneListOrg
+      listOrgUserSelected = this.cloneListOrg
         .filter((item) => item.listUser?.some((u) => u._isSelected))
         .flatMap((item) => item.listUser!.filter((u) => u._isSelected))
         .reduce((acc: SSOTypeUserDto[], item) => {
@@ -318,7 +347,10 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
         .map((item) => SSOTypeUserDto.fromJS(item));
     }
 
-    this.onSaveEvent.emit(listUserSelected);
+    return listOrgUserSelected;
+  }
+  onFilter() {
+    this.onSaveEvent.emit(this.getListOrgUserSelected());
   }
 
   //#endregion
@@ -326,6 +358,7 @@ export class UserOrgSelectComponent implements OnChanges, OnInit {
   //#region PRIVATE METHOD
 
   private initData() {
+    console.log('init data: ', this.listUserSelected);
     this.cloneListOrg =
       this.cloneListOrg.length > 0
         ? this.cloneListOrg
@@ -397,5 +430,10 @@ export interface ExtendedSSOTypeUserDto extends SSOTypeUserDto {
 
 export interface UserOrgSelectEvent {
   userInfo: InfoDetailUserDto;
+  state: boolean;
+}
+
+export interface OrgSelectEvent {
+  listUserInfo: InfoDetailUserDto[];
   state: boolean;
 }

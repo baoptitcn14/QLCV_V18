@@ -28,20 +28,8 @@
 @import "scss/color";
 
 // dialog custom
-.p-dialog-custom {
-    .p-dialog-content {
-        padding: 0;
-    }
+@import "scss/dialog";
 
-    .p-dialog-_content {
-        padding: 2rem 1.5rem;
-    }
-}
-
-.p-dialog-footer, .p-dialog-header {
-    background-color: var(--primary-50, #dee1e6);
-    padding: 1rem 1.5rem;
-}
 
 .ng-invalid .invalid-feedback {
     display: block;

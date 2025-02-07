@@ -1,14 +1,11 @@
-<div class="p-dialog-_content">
-  <p>dialog-test works!</p>
+<p>dialog-test works!</p>
 
-  <p-button
-    type="button"
-    label="Lưu"
-    icon="pi pi-save"
-    [size]="'small'"
-    severity="primary"
-    (onClick)="onShowDialog()"
-  />
-</div>
+<p-button
+  type="button"
+  label="Lưu"
+  icon="pi pi-save"
+  [size]="'small'"
+  severity="primary"
+  (onClick)="onShowDialog()"
+/>
 
-<dialog-footer [isNew]="isNew" [isValid]="true" (onCloseEvent)="onHide()"></dialog-footer>

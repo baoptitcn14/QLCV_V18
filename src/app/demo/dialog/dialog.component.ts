@@ -12,7 +12,6 @@ import { DialogTestComponent } from '../../shared/dialog-partials/dialog-test/di
   styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
-
   ref: DynamicDialogRef | undefined;
 
   constructor(private dialogService: DialogService) {}

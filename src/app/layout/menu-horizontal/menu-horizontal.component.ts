@@ -3,11 +3,12 @@ import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.component';
 import { CommonModule } from '@angular/common';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-menu-horizontal',
   standalone: true,
-  imports: [MenubarModule, TaskDialogComponent, CommonModule],
+  imports: [MenubarModule, CommonModule],
   templateUrl: './menu-horizontal.component.html',
   styleUrl: './menu-horizontal.component.scss',
 })
@@ -110,11 +111,19 @@ export class MenuHorizontalComponent {
     },
   ];
 
-  visibleTaskDialog = false;
-
-  constructor() {}
+  constructor(private dialogService: DialogService) {}
 
   private openTaskDialog() {
-    this.visibleTaskDialog = true;
+    this.dialogService.open(TaskDialogComponent, {
+      breakpoints: {
+        '1920px': '96vw',
+        '1600px': '96vw',
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      styleClass: 'p-dialog-custom p-task-add-dialog',
+      maximizable: true,
+      
+    });
   }
 }

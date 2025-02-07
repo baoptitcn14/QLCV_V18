@@ -1,18 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-// import { DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-// import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'dialog-footer',
   templateUrl: './dialog-footer.component.html',
   styleUrls: ['./dialog-footer.component.scss'],
   standalone: true,
-  imports: [CommonModule, 
-    ButtonModule, 
-    // ToastModule
-  ],
+  imports: [CommonModule, ButtonModule],
 })
 export class DialogFooterComponent {
   @Input({ required: true }) isNew: boolean | undefined = false;
