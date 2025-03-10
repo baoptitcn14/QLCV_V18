@@ -14,6 +14,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CreateCategoryComponent } from './create-category/create-category.component';
+import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-category',
@@ -50,6 +52,7 @@ export class CategoryComponent implements OnInit {
   @ViewChild('tt') tt!: TreeTable;
 
   constructor(
+    private dialogService: DialogService,
     private qlcvCategoryService: Qlcv_CategoryServiceProxy,
     private activatedRoute: ActivatedRoute
   ) {}
@@ -88,7 +91,22 @@ export class CategoryComponent implements OnInit {
     }
   }
 
-  onCreateCategory() {}
+  async onCreateCategory(value:any) {
+    const ref: DynamicDialogRef = this.dialogService.open(CreateCategoryComponent, {
+      header: 'Tạo danh mục',
+      width: '50vw',
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      styleClass: 'p-dialog-custom',
+      maximizable: true,
+      data: {
+        isNew: true,
+      },
+    });
+  }
 
   private getChildren(
     category: CategoryOutputDto,

@@ -5,7 +5,7 @@ import { Directive, ElementRef, Input, OnInit } from '@angular/core';
   standalone: true,
 })
 export class DialogHeaderDirective implements OnInit {
-  @Input() classDialog: string = '';
+  @Input() classDialog: string = ''; // nên đặt mỗi dialog 1 class riêng
 
   constructor(
     private el: ElementRef

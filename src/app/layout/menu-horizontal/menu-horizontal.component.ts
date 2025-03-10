@@ -65,6 +65,40 @@ export class MenuHorizontalComponent {
     {
       label: 'Cấu hình',
       icon: 'pi pi-cog',
+      items: [
+        {
+          label: 'Thiết lập báo cáo',
+          routerLink: '/setting/Thiết lập báo cáo',
+        },
+        {
+          label: 'Thời gian',
+          routerLink: '/setting/Thời gian',
+        },
+        {
+          label: 'Mẫu báo cáo dữ liệu',
+          routerLink: '/setting/Mẫu báo cáo dữ liệu',
+        },
+        {
+          label: 'Email',
+          routerLink: '/setting/Email',
+        },
+        {
+          label: 'Công việc',
+          routerLink: '/setting/Công việc',
+        },
+        {
+          label: 'Dữ liệu',
+          routerLink: '/setting/Dữ liệu',
+        },
+        {
+          label: 'Api dữ liệu',
+          routerLink: '/setting/Api dữ liệu',
+        },
+        {
+          label: 'Nhóm chat',
+          routerLink: '/setting/Nhóm chát',
+        },
+      ],
     },
     {
       label: 'Quản lý danh mục',
