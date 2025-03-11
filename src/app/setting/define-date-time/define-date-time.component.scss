@@ -1,0 +1,47 @@
+.custom-fieldset {
+    // border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    // background-color: #f9f9f9;
+  }
+  
+  .custom-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .custom-data-box {
+    background-color: #f1f1f1;
+    padding: 8px;
+    border-radius: 5px;
+    min-width: 150px;
+    text-align: center;
+  }
+  
+  .custom-dropdown, .custom-calendar {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+  
+  .custom-dropdown p-dropdown {
+    width: 100%;
+  }
+  
+  .custom-calendar p-calendar {
+    width: 100%;
+  }
+
+  .custom-row:last-child {
+    border-bottom: none !important;
+  }
+  
+
+
+
+@media screen and (min-width : 768px){
+    
+.custom-row label{
+    min-width: 222px;
+}
+}
