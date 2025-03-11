@@ -8,6 +8,7 @@ import { SetTokenComponent } from './shared/components/set-token/set-token.compo
 import { CategoryComponent } from './category/category.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FileReportComponent } from './file-report/file-report.component';
+import { DefineDateTimeComponent } from './setting/define-date-time/define-date-time.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
   {
     path: 'account/setToken',
     component: SetTokenComponent,
+  },
+  {
+    path: 'setting-time',
+    component: DefineDateTimeComponent,
   },
   {
     path: 'demo',

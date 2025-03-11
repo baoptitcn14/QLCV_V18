@@ -72,7 +72,7 @@ export class MenuHorizontalComponent {
         },
         {
           label: 'Thời gian',
-          routerLink: '/setting/Thời gian',
+          routerLink: '/setting-time',
         },
         {
           label: 'Mẫu báo cáo dữ liệu',
