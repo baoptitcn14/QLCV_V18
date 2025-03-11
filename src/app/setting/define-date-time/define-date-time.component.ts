@@ -25,41 +25,17 @@ export class DefineDateTimeComponent implements AfterViewInit {
   @Input() defineDateTime: Record<string, any> = { value: {} };
   @Input() listDayOfWeek: string[] = [];
   @Input() listDayInMonth: number[] = [];
-  @Input() iconAlign: 'left' | 'right' = 'left'
 
   congViecData: any = {};  
   duLieuData: any = {};    
 
   onSave = { emit: () => console.log('Lưu dữ liệu') };
   onReload = { emit: () => console.log('Làm mới dữ liệu') };
-  listOptions = [
-    { label: 'congViecData', value: 'TASK' },
-    { label: 'duLieuData', value: 'DATA' }
-  ];
-  selectedOption: string = 'TASK';
 
   @ViewChild('weekTemplate')    weekTemplate!: TemplateRef<any>;
   @ViewChild('monthTemplate')   monthTemplate!: TemplateRef<any>;
   @ViewChild('quarterTemplate') quarterTemplate!: TemplateRef<any>;
   @ViewChild('yearTemplate')    yearTemplate!: TemplateRef<any>;
-
-
-  loadData() {
-    // Giả lập dữ liệu  
-    this.congViecData = {
-      WEEK: 'Thứ Hai',
-      MONTH: 'Ngày 1',
-      QUARTER: '01/04',
-      YEAR: '2024'
-    };
-
-    this.duLieuData = {
-      WEEK: 'Thứ Ba',
-      MONTH: 'Ngày 15',
-      QUARTER: '01/07',
-      YEAR: '2025'
-    };
-  }
 
   configLayout = signal<any[]>([]);  // Dùng Signal API thay vì setTimeout
 
