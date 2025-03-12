@@ -9,6 +9,9 @@ import { CategoryComponent } from './category/category.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FileReportComponent } from './file-report/file-report.component';
 import { DefineDateTimeComponent } from './setting/define-date-time/define-date-time.component';
+import { ReportDataComponent } from './setting/report-data/report-data.component';
+import { TemplateReportComponent } from './setting/template-report/template-report.component';
+import { EmailComponent } from './setting/email/email.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +38,18 @@ export const routes: Routes = [
   {
     path: 'setting-time',
     component: DefineDateTimeComponent,
+  },
+  {
+    path: 'setting-reportdata',
+    component: ReportDataComponent,
+  },
+  {
+    path: 'setting-templatereport',
+    component: TemplateReportComponent,
+  },
+  {
+    path: 'setting-email',
+    component: EmailComponent,
   },
   {
     path: 'demo',

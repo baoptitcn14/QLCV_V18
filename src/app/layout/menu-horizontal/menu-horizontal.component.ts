@@ -68,19 +68,23 @@ export class MenuHorizontalComponent {
       items: [
         {
           label: 'Thiết lập báo cáo',
-          routerLink: '/setting/Thiết lập báo cáo',
+          routerLink: '/setting-reportdata',
         },
         {
           label: 'Thời gian',
           routerLink: '/setting-time',
         },
         {
+          label: 'Data',
+          routerLink: '/setting-data',
+        },
+        {
           label: 'Mẫu báo cáo dữ liệu',
-          routerLink: '/setting/Mẫu báo cáo dữ liệu',
+          routerLink: '/setting-templatereport',
         },
         {
           label: 'Email',
-          routerLink: '/setting/Email',
+          routerLink: '/setting-email',
         },
         {
           label: 'Công việc',
