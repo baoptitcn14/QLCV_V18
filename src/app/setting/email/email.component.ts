@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { FieldsetModule } from 'primeng/fieldset';
 // import { Select } from 'primeng/select';
 
 interface Category {
@@ -20,7 +21,7 @@ interface Data {
 @Component({
   selector: 'app-email',
   standalone: true,
-  imports: [CommonModule, CheckboxModule, TableModule, ButtonModule, DropdownModule,FormsModule],
+  imports: [CommonModule, CheckboxModule, TableModule, ButtonModule, DropdownModule,FormsModule,FieldsetModule],
   templateUrl: './email.component.html',
   styleUrl: './email.component.scss',
 })

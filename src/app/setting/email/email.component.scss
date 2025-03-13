@@ -1,3 +1,14 @@
+.title-header {
+  margin-left: 20px;
+}
+.fa-cog {
+  margin-top: 3px;
+}
+
+.custom-dropdown {
+  margin-top: -8px !important;
+}
+
 .category-list {
   width: 100%;
   border-collapse: collapse;
@@ -8,39 +19,33 @@
     align-items: center;
     gap: 10px;
   }
+
   th,
   td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
   }
-  
+
   th {
     text-align: left;
     background-color: #f8f9fa;
   }
-  
+
   td {
     vertical-align: middle;
   }
-  tr{
+  tr {
     font-size: 15px;
   }
-  
+
   /* Style checkbox */
   .p-checkbox {
     margin-right: 10px;
   }
-  
+
   /* Style danh mục cha */
   .category-parent {
     padding: 10px;
     // background: #f5f5f5;
   }
-
 }
-
-.custom-dropdown {
-  margin-top: -8px !important;
-
-}
-

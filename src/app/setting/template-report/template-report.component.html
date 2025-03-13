@@ -19,44 +19,62 @@
   </div>
 
   <!-- Table danh sách báo cáo -->
-  <!-- <p-table #dt [value]="reports" dataKey="name" [tableStyle]="{ 'min-width': '100%' }">
+  <p-table 
+    #dt
+    [value]="reports"
+    dataKey="name"
+    [responsiveLayout]="'scroll'"
+    [rowExpandMode]="'multiple'"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 40%">Tên mẫu báo cáo</th>
-        <th style="width: 10%"></th>
-        <th style="width: 10%"></th>
-        <th style="width: 10%"></th>
-        <th style="width: 10%"></th>
+        <th style="width: 50px"></th>
+        <th>Tên mẫu báo cáo</th>
+        <th style="width: 150px">Actions</th>
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+    <ng-template pTemplate="body" let-report>
       <tr>
         <td>
-          <p-tableToggleIcon [expanded]="expanded" (click)="dt.toggleRow(rowData)"></p-tableToggleIcon>
-          {{ rowData.name }}
+          <button
+            pButton
+            type="button"
+            (click)="dt.toggleRow(report)"
+            pRipple
+            class="p-button-text p-button-rounded"
+            size="small">
+          <i *ngIf="dt.isRowExpanded(report)" class="fa fa-chevron-down"></i>
+          <i *ngIf="!dt.isRowExpanded(report)" class="fa fa-chevron-right"></i>
+        </button>
         </td>
-        <td>
-          <button pButton icon="pi pi-sitemap" class="p-button-text"></button>
-        </td>
-        <td>
-          <button pButton icon="pi pi-download" class="p-button-text"></button>
-        </td>
-        <td>
-          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"></button>
-        </td>
-        <td>
-          <button pButton label="Thêm" icon="pi pi-plus" class="p-button-sm p-button-info"></button>
+        <td>{{ report.name }}</td>
+        <td class="actions d-flex gap-2">
+          <button pButton type="button" icon="fa fa-sitemap" class="setting-group-chat"  size="small" ></button>
+          <button pButton type="button" icon="fa fa-download" class="down"  size="small"></button>
+          <button pButton type="button" icon="fa fa-trash" class="delete" size="small"></button>
+          <button pButton type="button" icon="fa fa-plus" label="Thêm" class="create" size="small" iconPos="right"></button>
         </td>
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="rowexpansion" let-rowData>
-      <tr *ngFor="let sheet of rowData.sheets">
-        <td colspan="5">
-          <div style="padding-left: 20px;">{{ sheet }}</div>
+    <!-- Dữ liệu sheet mở rộng -->
+    <ng-template pTemplate="rowexpansion" let-report>
+      <tr *ngFor="let sheet of report.sheets">
+        <td></td>
+        <td>{{ sheet }}</td>
+        <td class="actions d-flex gap-2">
+          <button pButton type="button" icon="fa fa-copy" size="small"></button>
+          <button
+            pButton
+            type="button"
+            icon="fa fa-pencil"
+            label="Chỉnh sửa"
+            iconPos="right"
+            size="small"
+          ></button>
         </td>
       </tr>
     </ng-template>
-  </p-table> -->
+  </p-table>
 </div>

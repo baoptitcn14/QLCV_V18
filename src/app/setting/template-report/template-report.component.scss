@@ -8,4 +8,66 @@
 .button-file{
     display: flex;
     justify-content:end;
+    margin-bottom: 15px;
+}
+
+// Căn chỉnh bảng
+.p-table {
+    width: 100%;
+    // border-collapse: collapse;
+
+    th {
+        background-color: #f4f4f4; // Nền header nhẹ hơn
+        font-weight: bold;
+        text-align: left;
+    }
+
+    tr {
+        border-bottom: 1px solid #ddd; // Thêm viền giữa các hàng
+    }
+
+    td {
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    .actions {
+        display: flex;
+        gap: 5px;
+        justify-content: end;
+    }
+
+    button {
+        padding: 4px 6px;
+        font-size: 14px;
+    }
+    
+}
+.setting-group-chat{
+    background-color: #ffffff;
+    color:black;
+}
+.down{
+    background-color: #ffffff;
+    color: #337ab7;
+}
+.delete{
+    background-color: #ffffff;
+    color:#e7505a;
+}
+.create{
+    background-color: #32c5d2;
+}
+
+// Nút toggle expand row
+.p-button-text.p-button-rounded {
+    border: none;
+    background: none;
+    color: #007ad9;
+    transition: all 0.3s;
+
+    &:hover {
+        color: #004c9a;
+        transform: scale(1.1);
+    }
 }
