@@ -3,48 +3,42 @@
   border-collapse: collapse;
   margin-top: 20px;
 
-}
-th,
-td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  .checkbox-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  th,
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    text-align: left;
+    background-color: #f8f9fa;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+  tr{
+    font-size: 15px;
+  }
+  
+  /* Style checkbox */
+  .p-checkbox {
+    margin-right: 10px;
+  }
+  
+  /* Style danh mục cha */
+  .category-parent {
+    padding: 10px;
+    // background: #f5f5f5;
+  }
+
 }
 
-th {
-  text-align: left;
-  background-color: #f8f9fa;
-}
-
-td {
-  vertical-align: middle;
-}
-
-/* Style checkbox */
-.p-checkbox {
-  margin-right: 10px;
-}
-
-/* Style danh mục cha */
-.category-parent {
-  font-weight: bold;
-  padding: 10px;
-  // background: #f5f5f5;
-}
-
-/* Danh mục con thụt vào */
-.category-child td {
-  // padding-left: 30px !important;
-}
-
-/* Danh mục con cấp 2 thụt vào nhiều hơn */
-.category-subchild td {
-  // padding-left: 50px !important;
-}
-
-/* Style danh mục con cấp 2 (nếu có) */
-.category-subchild {
-  // padding-left: 50px;
-}
 .custom-dropdown {
   margin-top: -8px !important;
 

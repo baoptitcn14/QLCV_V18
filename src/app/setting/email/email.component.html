@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="d-flex justify-content-between mb-3 mt-5">
+  <div class="d-flex justify-content-between mb-3 mt-4">
     <div class="title-header d-flex gap-2">
       <i class="fa fa-cog"></i>
       <span style="font-size: 18px">Thiết lập email</span>
@@ -38,42 +38,45 @@
     <ng-template pTemplate="body" let-category>
       <!-- Danh mục cha -->
       <tr class="category-parent">
-        <td>
+        <td class="checkbox-text">
           <p-checkbox
             [binary]="true"
             [ngModel]="isParentSelected(category)"
             (onChange)="toggleParentCategory(category)"
           ></p-checkbox>
+          {{ category.name }}
         </td>
-        <td>{{ category.name }}</td>
+      
       </tr>
 
       <!-- Danh mục con -->
       <ng-container *ngIf="category.children">
         <ng-container *ngFor="let child of category.children">
           <tr class="category-child">
-            <td style="padding-left: 30px">
+            <td style="padding-left: 30px" class="checkbox-text">
               <p-checkbox
                 [binary]="true"
                 [ngModel]="selectedCategories.includes(child.key)"
                 (onChange)="onCheckboxChange(child.key, $event)"
               ></p-checkbox>
+              {{ child.name }}
             </td>
-            <td>{{ child.name }}</td>
+           
           </tr>
 
           <!-- Danh mục con cấp 2 (chỉ hiển thị nếu có children) -->
           <ng-container *ngIf="child.children">
             <ng-container *ngFor="let subChild of child.children">
               <tr class="category-subchild">
-                <td style="padding-left: 50px">
+                <td style="padding-left: 50px" class="checkbox-text">
                   <p-checkbox
                     [binary]="true"
                     [ngModel]="selectedCategories.includes(subChild.key)"
                     (onChange)="onCheckboxChange(subChild.key, $event)"
                   ></p-checkbox>
+                  {{ subChild.name }}
                 </td>
-                <td>{{ subChild.name }}</td>
+              
               </tr>
             </ng-container>
           </ng-container>
