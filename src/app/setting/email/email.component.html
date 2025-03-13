@@ -1,15 +1,15 @@
 <div class="container-fluid">
-  <!-- Header -->
   <div class="d-flex justify-content-between mb-3 mt-5">
     <div class="title-header d-flex gap-2">
       <i class="fa fa-cog"></i>
-      <span style="font-size:15px">Thiết lập email</span>
-      <p-dropdown 
-      [options]="emailOptions" 
-      [(ngModel)]="selectedEmailOption"
-      placeholder="Công việc"
-      styleClass="custom-dropdown"
-    ></p-dropdown>
+      <span style="font-size: 18px">Thiết lập email</span>
+      <div class="custom-dropdown">
+        <p-dropdown
+          [options]="emailOptions"
+          [(ngModel)]="selectedEmailOption"
+          placeholder="Công việc"
+        ></p-dropdown>
+      </div>
     </div>
     <div class="button-header d-flex gap-2">
       <p-button
@@ -17,7 +17,7 @@
         severity="success"
         icon="pi pi-save"
         iconPos="right"
-        size="small" 
+        size="small"
         (onClick)="onSave.emit()"
       ></p-button>
 
@@ -25,7 +25,7 @@
         label="Làm mới"
         icon="pi pi-sync"
         iconPos="right"
-        size="small" 
+        size="small"
         [ngClass]="'btn-light btn-sm'"
         (onClick)="onReload.emit()"
       ></p-button>
@@ -47,12 +47,12 @@
         </td>
         <td>{{ category.name }}</td>
       </tr>
-  
+
       <!-- Danh mục con -->
       <ng-container *ngIf="category.children">
         <ng-container *ngFor="let child of category.children">
           <tr class="category-child">
-            <td style="padding-left: 30px;">
+            <td style="padding-left: 30px">
               <p-checkbox
                 [binary]="true"
                 [ngModel]="selectedCategories.includes(child.key)"
@@ -61,12 +61,12 @@
             </td>
             <td>{{ child.name }}</td>
           </tr>
-  
+
           <!-- Danh mục con cấp 2 (chỉ hiển thị nếu có children) -->
           <ng-container *ngIf="child.children">
             <ng-container *ngFor="let subChild of child.children">
               <tr class="category-subchild">
-                <td style="padding-left: 50px;">
+                <td style="padding-left: 50px">
                   <p-checkbox
                     [binary]="true"
                     [ngModel]="selectedCategories.includes(subChild.key)"
@@ -81,6 +81,4 @@
       </ng-container>
     </ng-template>
   </p-table>
-  
-  
 </div>

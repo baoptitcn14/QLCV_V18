@@ -3,69 +3,50 @@
   border-collapse: collapse;
   margin-top: 20px;
 
-  th,
-  td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-
-  th {
-    text-align: left;
-    background-color: #f8f9fa;
-  }
-
-  td {
-    vertical-align: middle;
-  }
-
-  /* Style checkbox */
-  .p-checkbox {
-    margin-right: 10px;
-  }
-
-  /* Style danh mục cha */
-  .category-parent {
-    font-weight: bold;
-    padding: 10px;
-    background: #f5f5f5;
-  }
-
-  /* Style danh mục con */
-  // .category-child td {
-  //   padding-left: 20px !important; /* Thụt vào danh mục con */
-  // }
-  /* Danh mục cha */
-  .category-parent {
-    font-weight: bold;
-    background: #f5f5f5;
-  }
-
-  /* Danh mục con thụt vào */
-  .category-child td {
-    // padding-left: 30px !important;
-  }
-
-  /* Danh mục con cấp 2 thụt vào nhiều hơn */
-  .category-subchild td {
-    // padding-left: 50px !important;
-  }
-
-  /* Style danh mục con cấp 2 (nếu có) */
-  .category-subchild {
-    // padding-left: 50px;
-  }
-  .custom-dropdown {
-    width: 120px !important;
-    height: 20px !important;
-    font-size: 12px !important;
-
-    .p-dropdown-label {
-      font-size: 12px !important;
-      padding: 4px !important;
-    }
-
-    .p-dropdown-trigger {
-      width: 20px !important;
-    }
-  }
 }
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  text-align: left;
+  background-color: #f8f9fa;
+}
+
+td {
+  vertical-align: middle;
+}
+
+/* Style checkbox */
+.p-checkbox {
+  margin-right: 10px;
+}
+
+/* Style danh mục cha */
+.category-parent {
+  font-weight: bold;
+  padding: 10px;
+  // background: #f5f5f5;
+}
+
+/* Danh mục con thụt vào */
+.category-child td {
+  // padding-left: 30px !important;
+}
+
+/* Danh mục con cấp 2 thụt vào nhiều hơn */
+.category-subchild td {
+  // padding-left: 50px !important;
+}
+
+/* Style danh mục con cấp 2 (nếu có) */
+.category-subchild {
+  // padding-left: 50px;
+}
+.custom-dropdown {
+  margin-top: -8px !important;
+
+}
+
