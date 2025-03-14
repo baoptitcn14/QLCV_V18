@@ -12,6 +12,7 @@ import { DefineDateTimeComponent } from './setting/define-date-time/define-date-
 import { ReportDataComponent } from './setting/report-data/report-data.component';
 import { TemplateReportComponent } from './setting/template-report/template-report.component';
 import { EmailComponent } from './setting/email/email.component';
+import { TaskComponent } from './task/task.component';
 
 export const routes: Routes = [
   {
@@ -35,10 +36,16 @@ export const routes: Routes = [
     path: 'account/setToken',
     component: SetTokenComponent,
   },
-  {
+   //Giang tạo
+   {
     path: 'setting-time',
     component: DefineDateTimeComponent,
   },
+  {
+    path: 'setting-task',
+    component: TaskComponent,
+  },
+  //-------
   {
     path: 'setting-reportdata',
     component: ReportDataComponent,

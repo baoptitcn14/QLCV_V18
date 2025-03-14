@@ -1,0 +1,153 @@
+
+<div class="container mt-3">
+    <div class="d-flex justify-content-end mb-3 gap-2 ">
+        <p-button 
+        label="Lưu" 
+        severity="success"
+        icon="pi pi-save" 
+        iconPos="right" 
+        (onClick)="save.emit()">
+      </p-button>
+
+      <p-button 
+      label="Làm mới"
+      icon="fas fa-sync"
+      iconPos="right"
+      [ngClass]="'btn-light btn-sm padding-tb-3'"
+      (onClick)="refresh.emit()">
+    </p-button>
+    </div>
+
+    <div style="margin-bottom: 5px;">
+      <p-checkbox binary="true"></p-checkbox>
+      <label class="ms-2">Bỏ xem công việc mới</label>
+  </div>
+  <br>
+  <div style="margin-bottom: 5px;">
+      <p-checkbox binary="true"></p-checkbox>
+      <label class="ms-2">Tự động lưu cấu hình công việc</label>
+  </div>
+  
+
+    <p-fieldset legend="Thiết Lập Công việc" [toggleable]="true" class="custom-fieldset">
+      <ng-container *ngTemplateOutlet="template1; context: { data: congViecData }"></ng-container>
+    </p-fieldset>
+  
+    <p-fieldset legend="Thiết Lập Data" [toggleable]="true" class="custom-fieldset">
+      <ng-container *ngTemplateOutlet="template1; context: { data: duLieuData }"></ng-container>
+    </p-fieldset>
+  </div>
+  
+  <ng-template #template1 let-abc="data">
+    <div class="row">
+      <ng-container *ngFor="let item of configLayout()">
+        <div class="col-12 d-flex align-items-center custom-row">
+            <span class="col-sm-5 col-4 fw-bold">{{ item.headerLeft }}</span>
+            <div class="col-sm-7 col-8 d-flex align-items-center">
+            <label>{{ item.headerRight }}:</label>
+            <div class="form-group form-md-line-input padding-0 custom-data-box">
+              {{ abc }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div id="view-column">
+      <div class="row">
+        <div class="col-xs-12 col-md-3 col-left">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-condensed middle table-hover">
+              <tbody>
+                <tr>
+                  <td>Tên công việc</td>
+                  <td>
+                    <!-- <p-checkbox [(ngModel)]="colDefault.nameTask.isFreeze"></p-checkbox> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>Người xử lý</td>
+                  <td>
+                    <div class="checkbox-container">
+                      <p-checkbox binary="true" >
+                        <ng-template pTemplate="checkicon">
+                          <i class="bi bi-check"></i> 
+                        </ng-template>
+                      </p-checkbox>
+                    </div>
+                <!-- <p-checkbox [(ngModel)]="colDefault.nguoiXuLy.isFreeze"></p-checkbox> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hiển thị cột trễ</td>
+                  <td>
+                    <div class="checkbox-container">
+                      <p-checkbox binary="true" >
+                        <ng-template pTemplate="checkicon">
+                          <i class="bi bi-check"></i> 
+                        </ng-template>
+                      </p-checkbox>
+                    </div>
+                    <!-- <p-checkbox [(ngModel)]="isShowLate" (onChange)="onCheckLateColumn()"></p-checkbox> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>Số tuần hiển thị</td>
+                  <td>
+                    <div class="checkbox-container">
+                      <p-checkbox binary="true" >
+                        <ng-template pTemplate="checkicon">
+                          <i class="bi bi-check"></i> 
+                        </ng-template>
+                      </p-checkbox>
+                    </div>
+                    <!-- <p-inputNumber [(ngModel)]="numberWeekShow" (onInput)="onChangeDisplaySetting('week', $event.value)" [min]="0"></p-inputNumber> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>Số tháng hiển thị</td>
+                  <td>
+                    <!-- <p-inputNumber [(ngModel)]="numberMonthShow" (onInput)="onChangeDisplaySetting('month', $event.value)" [min]="0"></p-inputNumber> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>Số năm hiển thị</td>
+                  <td>
+                    <!-- <p-inputNumber [(ngModel)]="numberYearShow" (onInput)="onChangeDisplaySetting('year', $event.value)" [min]="0"></p-inputNumber> -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    
+        <!-- <div class="col-xs-12 col-md-9 col-right">
+          <div class="item" *ngFor="let c of columns">
+            {{ c.name }}
+          </div>
+        </div> -->
+        <!-- Cột bên phải -->
+      <div class="col-md-8">
+        <div class="card p-3 shadow-sm">
+          <h5 class="mb-3">Tùy chọn hiển thị</h5>
+          <div class="row">
+            <div class="col-md-3" *ngFor="let item of displayOptions">
+              <div class="form-group">
+                <!-- <p-checkbox binary="true" [(ngModel)]="item.checked"></p-checkbox> -->
+                <label class="ms-2">{{ item.label }}</label>
+              </div>
+              <div class="form-group">
+                <p-checkbox binary="true" [(ngModel)]="item.freeze"></p-checkbox>
+                <label class="ms-2">Đóng băng</label>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+
+    
+      </div>
+    </div>
+  </ng-template>
+  
+  
+  

@@ -88,7 +88,7 @@ export class MenuHorizontalComponent {
         },
         {
           label: 'Công việc',
-          routerLink: '/setting/Công việc',
+          routerLink: '/setting-task',
         },
         {
           label: 'Dữ liệu',
