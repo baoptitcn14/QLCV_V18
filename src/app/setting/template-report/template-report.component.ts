@@ -26,8 +26,8 @@ export class TemplateReportComponent {
 
   ref: DynamicDialogRef | undefined;
 
-  selectedEmailOption: string = 'work'; // Giá trị mặc định
-  emailOptions = [
+  selectedOption: string = 'work'; // Giá trị mặc định
+  options = [
     { label: 'Công việc', value: 'work' },
     { label: 'Data', value: 'data' }
   ];
@@ -56,7 +56,7 @@ export class TemplateReportComponent {
   openSheetDetail(){
     this.ref = this.dialogService.open(SheetDetailComponent, {
       header: 'Cấu hình SHEET NAME',
-      width: '50vw',
+      width: '90vw',
       contentStyle: { overflow: 'auto' },
       breakpoints: {
         '960px': '75vw',

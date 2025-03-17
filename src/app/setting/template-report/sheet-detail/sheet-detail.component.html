@@ -1,19 +1,83 @@
-<div>
-    <div class="row">
-        <div class="col-xs 12 col-md-6">
-            <input type="text" pInputText id="over_label" formControlName="text" />
-            <label for="over_label">SHEET NAME</label>
-          </div>
-    </div>
-    <div class="table">
+<div class="container-fluid">
+    <p-confirmDialog></p-confirmDialog>
 
+  <div class="row">
+    <div class="col-12 col-md-5">
+      <!-- <input pInputText  type="text" pSize="large" class="w-100" placeholder="Sheet name" /> -->
+      <p-floatLabel variant="on">
+        <input
+          pInputText
+          id="on_label"
+          [(ngModel)]="value1"
+          autocomplete="off"
+          class="w-100"
+        />
+        <label for="on_label">SHEET NAME</label>
+      </p-floatLabel>
     </div>
+    <div class="col-12 col-md-3">
+      <span class="title_dl">Dữ liệu</span>
+    </div>
+    <div class="col-12 col-md-4">
+      <p-floatLabel variant="on">
+        <input
+          pInputText
+          id="on_label"
+          [(ngModel)]="search"
+          autocomplete="off"
+          class="w-100"
+        />
+        <label for="on_label">Nhập dữ liệu cần tìm</label>
+      </p-floatLabel>
+    </div>
+  </div>
+  <div class="card mt-3">
+    <p-checkbox inputId="ny" />
+    <label for="ny" class="ml-5 fw-bold">Ẩn các cột không có giá trị</label>
+  </div>
+  <div class="table table-responsive mt-5">
+    <table class="table table-bordered">
+        <thead class="bg-light">
+          <tr>
+            <th width="60px">STT</th>
+            <th width="60px">Vị trí</th>
+            <th width="100px">Tên cột</th>
+            <th>Giá trị</th>
+            <th>Loại dữ liệu</th>
+            <th>Định dạng</th>
+            <th>Loại cấu hình</th>
+            <th style="text-align: center;">
+                <button pButton icon="pi pi-plus" class="p-button-text text-success" (click)="addRow()"></button></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of data; let i = index">  
+            <td class="text-danger">{{ i + 1 }}</td>
+            <td><input pInputText type="text" class="w-100"/></td>
+            <td><input pInputText type="text" class="w-100" /></td>
+            <td><input pInputText type="text" class="w-100" /></td>
+            <td>
+              <p-dropdown [options]="dataTypes" [(ngModel)]="row.dataType" class="w-100"></p-dropdown>
+            </td>
+            <td><input pInputText type="text" class="w-100" /></td>
+            <td>
+              <p-dropdown [options]="configTypes" [(ngModel)]="row.configType" class="w-100"></p-dropdown>
+            </td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" class="p-button-text text-danger" (click)="confirmRemoveRow(i)"></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
 </div>
 
-<p-button
-  type="button"
-  label="Lưu"
-  icon="pi pi-save"
-  severity="primary"
-  (onClick)="onShowDialog()"
-/>
+<div class="button_luu">
+  <p-button
+    type="button"
+    label="Lưu"
+    icon="pi pi-save"
+    severity="primary"
+    (onClick)="onShowDialog()"
+  />
+</div>
