@@ -9,6 +9,8 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
 import { SettingDto } from '../shared/service-proxies/qlcv-service-proxies';
 import { Column } from '../shared/interfaces';
+import { DropdownModule } from 'primeng/dropdown';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @Component({
   selector: 'app-task',
@@ -21,7 +23,8 @@ import { Column } from '../shared/interfaces';
     FieldsetModule,
     CheckboxModule,
     FormsModule,
-    
+    DropdownModule,
+    SplitButtonModule
   ],
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss'
@@ -48,6 +51,8 @@ export class TaskComponent implements AfterViewInit{
   numberYearShow = 1;
   isShowLate = true;
   listFreeze: string[] = [];
+  isChecked: boolean = false;
+
 
   displayOptions = [
     { label: 'Trễ', checked: false, freeze: false },
@@ -58,6 +63,24 @@ export class TaskComponent implements AfterViewInit{
     { label: 'Tháng +1', checked: false, freeze: false },
     { label: 'Năm', checked: false, freeze: false }
   ];
+
+  listLevel: any[] = [
+    { name: '0', code: 'NY' ,label: '0'},
+    { name: '1', code: 'NY' ,label: '0'},
+    { name: '2', code: 'RM' ,label: '0'},
+    { name: '3', code: 'LDN' ,label: '0'},
+    { name: '4', code: 'IST' ,label: '0'},
+    { name: '5', code: 'PRS' ,label: '0'}
+  ]; 
+  listViewLevel: any[] = [
+    { name: 'Xem đến bậc 0', code: '1' },
+    { name: 'Xem đến bậc 1', code: '1' },
+    { name: 'Xem đến bậc 2', code: '2' },
+    { name: 'Xem đến bậc 3', code: '3' },
+    { name: 'Xem đến bậc 4', code: '4' },
+    { name: 'Xem đến bậc 5', code: '5' }
+  ] ;
+  selectedCity: any | undefined;
   
 
   constructor(
@@ -69,6 +92,9 @@ export class TaskComponent implements AfterViewInit{
   ngAfterViewInit(): void {
 
     }
+    onCheckboxChange() {
+      console.log("Checkbox state:", this.isChecked);
+  }
   }
 
 
