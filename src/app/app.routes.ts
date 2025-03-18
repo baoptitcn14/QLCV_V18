@@ -13,6 +13,8 @@ import { ReportDataComponent } from './setting/report-data/report-data.component
 import { TemplateReportComponent } from './setting/template-report/template-report.component';
 import { EmailComponent } from './setting/email/email.component';
 import { TaskComponent } from './task/task.component';
+import { TaskSearchComponent } from './search/task-search/task-search.component';
+import { NotifySearchComponent } from './search/notify-search/notify-search.component';
 
 export const routes: Routes = [
   {
@@ -46,6 +48,14 @@ export const routes: Routes = [
     component: TaskComponent,
   },
   //-------
+  {
+    path: 'search-task',
+    component: TaskSearchComponent,
+  },
+  {
+    path: 'search-notify',
+    component: NotifySearchComponent,
+  },
   {
     path: 'setting-reportdata',
     component: ReportDataComponent,

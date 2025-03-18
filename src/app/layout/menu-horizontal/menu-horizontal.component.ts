@@ -50,11 +50,11 @@ export class MenuHorizontalComponent {
       items: [
         {
           label: 'Công việc',
-          routerLink: '/search/task',
+          routerLink: '/search-task',
         },
         {
           label: 'Thông báo',
-          routerLink: '/search/notify',
+          routerLink: '/search-notify',
         },
         {
           label: 'Dữ liệu',
