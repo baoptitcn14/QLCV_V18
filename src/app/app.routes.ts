@@ -12,7 +12,7 @@ import { DefineDateTimeComponent } from './setting/define-date-time/define-date-
 import { ReportDataComponent } from './setting/report-data/report-data.component';
 import { TemplateReportComponent } from './setting/template-report/template-report.component';
 import { EmailComponent } from './setting/email/email.component';
-import { TaskComponent } from './task/task.component';
+import { TaskComponent } from './setting/task/task.component';
 import { TaskSearchComponent } from './search/task-search/task-search.component';
 import { NotifySearchComponent } from './search/notify-search/notify-search.component';
 

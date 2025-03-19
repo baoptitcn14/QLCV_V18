@@ -3,12 +3,12 @@ import { AfterViewInit, Component, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { PanelModule } from 'primeng/panel';
-import { SettingService } from '../shared/services/setting.service';
+import { SettingService } from '../../shared/services/setting.service';
 import { CommonModule } from '@angular/common';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
-import { SettingDto } from '../shared/service-proxies/qlcv-service-proxies';
-import { Column } from '../shared/interfaces';
+import { SettingDto } from '../../shared/service-proxies/qlcv-service-proxies';
+import { Column } from '../../shared/interfaces';
 import { DropdownModule } from 'primeng/dropdown';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
