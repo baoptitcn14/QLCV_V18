@@ -1,1 +1,19 @@
-<p>task-search works!</p>
+<div class="container-fluid">
+  <div class="custom-toolbar">
+    <div class="p-toolbar-group-left">
+      <i class="fa fa-search"></i>
+      <span class="title">Tra cứu công việc</span>
+    </div>
+
+    <div class="p-toolbar-group-right">
+      <p-dropdown
+        [options]="uploadedFiles"
+        placeholder=" "
+        styleClass="custom-dropdown"
+      ></p-dropdown>
+      <button pButton icon="fa fa-download" class="p-button-text"></button>
+      <button pButton icon="fa fa-upload" class="p-button-text"></button>
+      <button pButton icon="fa fa-refresh" class="p-button-text"></button>
+    </div>
+  </div>
+</div>
