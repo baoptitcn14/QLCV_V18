@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="task container-fluid">
   <div class="custom-toolbar">
     <div class="p-toolbar-group-left">
       <i class="fa fa-search"></i>
@@ -15,5 +15,171 @@
       <button pButton icon="fa fa-upload" class="p-button-text"></button>
       <button pButton icon="fa fa-refresh" class="p-button-text"></button>
     </div>
+  </div>
+  <div class="col-12 full-width">
+    <table class="w-100">
+      <thead>
+        <tr>
+          <!-- search-box -->
+          <th  class="th-45">
+            <div class="task-search">
+              <div class="input-base input-search">
+                <i class="fa fa-search"></i>
+                <input
+                  type="text"
+                  class="search-input"
+                  pInputText
+                  placeholder="Tìm kiếm công việc ...."
+                />
+              </div>
+            </div>
+          </th>
+          <!-- end -->
+  
+          <!-- user-handel -->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Người Xử lý</span>
+                <br />
+                <span>(Tất cả)</span>
+              </span>
+              <i class="fa-solid fa-caret-down" style="margin-left: 15px;"></i>
+            </div>
+          </th>
+          <!-- end -->
+  
+          <!-- lọc theo thời gian -->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Lọc theo thời gian </span>
+                <br />
+                <span>(Hạn hoàn thành)</span>
+              </span>
+              <i class="fa fa-filter bold line-height-35" style="margin-left: 10px;"></i>
+            </div>
+          </th>
+          <!-- end -->
+  
+          <!-- trang thái-->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Trạng thái</span>
+                <br />
+                <!-- <span>(Đã duyệt)</span> -->
+                <span *ngIf="selectedStatus">{{ selectedStatus }}</span>
+                <span *ngIf="!selectedStatus">(Tất cả)</span>
+              </span>
+              <!-- <i class="fa-solid fa-caret-down" style="margin-left: 15px;"></i> -->
+              <i class="fa-solid fa-caret-down" 
+              style="margin-left: 15px; cursor: pointer;" 
+              (click)="toggleStatusDropdown()">
+           </i>
+       
+           <!-- Dropdown hiển thị khi isDropdownOpen = true -->
+           <div class="dropdown-menu" *ngIf="isStatusDropdownOpen">
+             <div 
+               *ngFor="let status of statusFilters" 
+               class="dropdown-item" 
+               (click)="selectStatus(status.label)">  
+               {{ status.label }}
+             </div>
+           </div>
+            </div>
+          </th>
+          <!-- end -->
+  
+          <!-- loại định kỳ -->
+          <th class="th-10">
+            <div class="d-flex justify-content-center ">
+              <span class="text-center">
+                <span>Loại định kỳ</span>
+                <br />
+                <!-- <span>(Tất cả)</span> -->
+                <span *ngIf="selectedFrequency">{{ selectedFrequency }}</span>
+                <span *ngIf="!selectedFrequency">(Tất cả)</span>
+              </span>
+              <!-- <i class="fa-solid fa-caret-down" style="margin-left: 15px;"></i> -->
+              <i class="fa-solid fa-caret-down" 
+              style="margin-left: 15px; cursor: pointer;" 
+              (click)="toggleFrequencyDropdown()">
+           </i>
+       
+           <!-- Dropdown -->
+           <div class="dropdown-menu" *ngIf="isFrequencyDropdownOpen">
+             <div 
+               *ngFor="let frequency of frequencyFilters" 
+               class="dropdown-item" 
+               (click)="selectFrequency(frequency.label)">  
+               {{ frequency.label }}
+             </div>
+           </div>
+            </div>
+          </th>
+          <!-- end -->
+  
+          <!-- loại công việc -->
+          <th class="th-10" >
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Loại công việc</span>
+                <br />
+                <span>(Tất cả)</span>
+              </span>
+              <i class="fa-solid fa-caret-down" style="margin-left: 15px;"></i>
+            </div>
+          </th>
+          <!-- end -->
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let task of filteredTasks()">
+          <!-- Hàng cha -->
+          <tr>
+            <td (click)="task.expanded = !task.expanded" class="category-header">
+              <strong>
+                <i class="fa"
+                [ngClass]="{
+                  'fa-angle-down': task.expanded,
+                  'fa-angle-right': !task.expanded,
+                  'approved': task.status === 'Đã duyệt',
+                  'pending': task.status === 'Phê duyệt thay đổi'
+                }"></i> {{ task.name }}
+              </strong>
+            </td>
+            <td>{{ task.assignee }}</td>
+            <td class="text-center">{{ task.deadline }}</td>
+            <td class="text-center">
+              <span class="status" [ngClass]="{'approved': task.status === 'Đã duyệt', 'pending': task.status === 'Phê duyệt thay đổi'}">
+                {{ task.status }}
+              </span>
+            </td>
+            <td class="text-center">{{ task.frequency }}</td>
+            <td>{{ task.category }}</td>
+          </tr>
+      
+          <!-- Hàng con -->
+          <tr *ngFor="let subTask of task.subTasks" [hidden]="!task.expanded">
+            <td style="padding-left: 20px;">
+              <span style="color: green;">●</span> {{ subTask.name }}
+            </td>
+            <td>{{ subTask.assignee }}</td>
+            <td class="text-center">{{ subTask.deadline }}</td>
+            <td class="text-center">
+              <span class="status" [ngClass]="{'approved': subTask.status === 'Đã duyệt', 'pending': subTask.status === 'Phê duyệt thay đổi'}">
+                {{ subTask.status }}
+              </span>
+            </td>
+            <td class="text-center">{{ subTask.frequency }}</td>
+            <td>{{ subTask.category }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+      
+      
+    </table>
+    
   </div>
 </div>
