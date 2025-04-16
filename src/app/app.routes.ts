@@ -15,6 +15,8 @@ import { EmailComponent } from './setting/email/email.component';
 import { TaskComponent } from './setting/task/task.component';
 import { TaskSearchComponent } from './search/task-search/task-search.component';
 import { NotifySearchComponent } from './search/notify-search/notify-search.component';
+import { WorkHandoverComponent } from './category/work-handover/work-handover.component';
+import { DetailComponent } from './category/work-handover/detail/detail.component';
 
 export const routes: Routes = [
   {
@@ -67,6 +69,14 @@ export const routes: Routes = [
   {
     path: 'setting-email',
     component: EmailComponent,
+  },
+  {
+    path: 'category-workhandover',
+    component: WorkHandoverComponent,
+  },
+  {
+    path: 'category-work-handover/detail',
+    component: DetailComponent,
   },
   {
     path: 'demo',

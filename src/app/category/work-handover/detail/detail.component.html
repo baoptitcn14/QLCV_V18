@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <span class="">Người bàn giao</span>
+    </div>
+    <div class="col-md-8">
+      <!-- <p-button 
+        label="Lưu" 
+        severity="success"
+        icon="pi pi-save" 
+        iconPos="right" >
+      </p-button> -->
+      <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column gap-2">
+          <label>Tiêu đề</label>
+          <input
+            formControlName="title"
+            pInputText
+            class="flex-grow-1"
+            [required]="true"
+            variant="filled"
+          />
+        </div>
+        <div class="d-flex flex-column mt-3 gap-2">
+          <label>Nội dung bàn giao</label>
+          <textarea
+            formControlName="content"
+            pInputTextarea
+            rows="5"
+            cols="30"
+            variant="filled"
+            class="flex-grow-1"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

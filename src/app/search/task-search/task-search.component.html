@@ -1,10 +1,10 @@
 <div class="task container-fluid">
   <div class="custom-toolbar">
     <div class="p-toolbar-group-left">
-      <i class="fa fa-search"></i>
+      <i class="fa fa-search"></i>  
       <span class="title">Tra cứu công việc</span>
     </div>
-
+ 
     <div class="p-toolbar-group-right">
       <p-dropdown
         [options]="uploadedFiles"
@@ -12,8 +12,8 @@
         styleClass="custom-dropdown"
       ></p-dropdown>
       <button pButton icon="fa fa-download" class="p-button-text"></button>
-      <button pButton icon="fa fa-upload" class="p-button-text"></button>
-      <button pButton icon="fa fa-refresh" class="p-button-text"></button>
+      <button pButton icon="fa fa-upload" class="p-button-text" (click)="openUploadTemplate()"></button>
+      <button pButton icon="fa fa-refresh" class="p-button-text" (click)="refreshList()"></button>
     </div>
   </div>
   <div class="col-12 full-width">
@@ -57,7 +57,7 @@
                 <br />
                 <span>(Hạn hoàn thành)</span>
               </span>
-              <i class="fa fa-filter bold line-height-35" style="margin-left: 10px;"></i>
+              <i class="fa fa-filter bold line-height-35" style="margin-left: 10px;" (click)="openDate()"></i>
             </div>
           </th>
           <!-- end -->
@@ -137,16 +137,21 @@
       <tbody>
         <ng-container *ngFor="let task of filteredTasks()">
           <!-- Hàng cha -->
-          <tr>
+          <tr style="font-size:15px">
             <td (click)="task.expanded = !task.expanded" class="category-header">
               <strong>
-                <i class="fa"
-                [ngClass]="{
-                  'fa-angle-down': task.expanded,
-                  'fa-angle-right': !task.expanded,
-                  'approved': task.status === 'Đã duyệt',
-                  'pending': task.status === 'Phê duyệt thay đổi'
-                }"></i> {{ task.name }}
+                <span *ngIf="(task.subTasks?.length ?? 0) > 0">
+                  <i class="fa"
+                    [ngClass]="{
+                      'fa-angle-down': task.expanded,
+                      'fa-angle-right': !task.expanded,
+                      'approved': task.status === 'Đã duyệt',
+                      'pending': task.status === 'Phê duyệt thay đổi'
+                    }">
+                  </i>
+                </span>
+                <span *ngIf="!(task.subTasks?.length ?? 0)" style="color: green;">●</span>
+                {{ task.name }}
               </strong>
             </td>
             <td>{{ task.assignee }}</td>
@@ -159,9 +164,11 @@
             <td class="text-center">{{ task.frequency }}</td>
             <td>{{ task.category }}</td>
           </tr>
+          
+          
       
           <!-- Hàng con -->
-          <tr *ngFor="let subTask of task.subTasks" [hidden]="!task.expanded">
+          <tr *ngFor="let subTask of task.subTasks" [hidden]="!task.expanded" style="font-size:15px">
             <td style="padding-left: 20px;">
               <span style="color: green;">●</span> {{ subTask.name }}
             </td>

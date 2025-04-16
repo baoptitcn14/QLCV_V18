@@ -4,6 +4,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.component';
 import { CommonModule } from '@angular/common';
 import { DialogService } from 'primeng/dynamicdialog';
+import { NotifyDialogComponent } from '../../dialogs/notify-dialog/notify-dialog.component';
 
 @Component({
   selector: 'app-menu-horizontal',
@@ -109,6 +110,10 @@ export class MenuHorizontalComponent {
       icon: 'pi pi-list',
       items: [
         {
+          label: 'Bàn giao công việc',
+          routerLink: '/category-workhandover',
+        },
+        {
           label: 'Loại công việc',
           routerLink: '/category/TASK/Loại công việc',
         },
@@ -130,7 +135,9 @@ export class MenuHorizontalComponent {
         },
         {
           label: 'Thông báo',
-          routerLink: '/new/notify',
+          command: () => {
+            this.openNotifyDialog();
+          },
         },
         {
           label: 'Dữ liệu',
@@ -160,6 +167,20 @@ export class MenuHorizontalComponent {
         '640px': '90vw',
       },
       styleClass: 'p-dialog-custom p-task-add-dialog',
+      maximizable: true,
+      
+    });
+  }
+
+  private openNotifyDialog() {
+    this.dialogService.open(NotifyDialogComponent, {
+      breakpoints: {
+        '1920px': '96vw',
+        '1600px': '96vw',
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      styleClass: 'p-dialog-custom p-notify-add-dialog',
       maximizable: true,
       
     });

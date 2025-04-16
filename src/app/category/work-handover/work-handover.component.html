@@ -1,0 +1,154 @@
+<div class="workHandover container-fluid">
+  <div class="workHandover-toolbar">
+    <div class="p-toolbar-group-left">
+      <span class="title">Bàn Giao Công Việc</span>
+    </div>
+    <div class="p-toolbar-group-right gap-2">
+      <button
+        pButton
+        type="button"
+        icon="fa fa-plus"
+        label="Thêm mới"
+        class="create"
+        iconPos="right"
+        (click)="openWorkDetail()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        icon="fa fa-refresh"
+        label="Làm mới"
+        class="refresh"
+        iconPos="right"
+      ></button>
+    </div>
+  </div>
+
+  <div class="col-12 full-width table-work">
+    <table class="w-100">
+      <thead>
+        <tr>
+          <!-- search-box -->
+          <th class="th-45">
+            <div class="task-search">
+              <div class="input-base input-search">
+                <i class="fa fa-search"></i>
+                <input
+                  type="text"
+                  class="search-input"
+                  pInputText
+                  placeholder="Tìm kiếm công việc ...."
+                />
+              </div>
+            </div>
+          </th>
+          <!-- end -->
+
+          <!-- Nguoiừ tạo-->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Người tạo</span>
+                <br />
+                <span>(Tất cả)</span>
+              </span>
+              <i class="fa-solid fa-caret-down" style="margin-left: 15px"></i>
+            </div>
+          </th>
+          <!-- end -->
+
+          <!-- Người bàn giao -->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Người bàn giao </span>
+                <br />
+                <span>(Tất cả)</span>
+              </span>
+              <i class="fa-solid fa-caret-down" style="margin-left: 15px"></i>
+            </div>
+          </th>
+          <!-- end -->
+
+          <!-- Người duyệt -->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Người duyệt </span>
+                <br />
+                <span>(Tất cả)</span>
+              </span>
+              <i class="fa-solid fa-caret-down" style="margin-left: 15px"></i>
+            </div>
+          </th>
+          <!-- end -->
+
+          <!-- Bộ phận tiếp nhận-->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Bộ phận tiếp nhận </span>
+                <br />
+                <span>(Tất cả)</span>
+              </span>
+              <i class="fa-solid fa-caret-down" style="margin-left: 15px"></i>
+            </div>
+          </th>
+          <!-- end -->
+
+          <!-- trang thái-->
+          <th class="th-10">
+            <div class="d-flex justify-content-center">
+              <span class="text-center">
+                <span>Trạng thái</span>
+                <br />
+                <!-- <span>(Đã duyệt)</span> -->
+                <span></span>
+                <span>(Tất cả)</span>
+              </span>
+              <!-- <i class="fa-solid fa-caret-down" style="margin-left: 15px;"></i> -->
+              <i
+                class="fa-solid fa-caret-down"
+                style="margin-left: 15px; cursor: pointer"
+              >
+              </i>
+
+              <!-- Dropdown hiển thị khi isDropdownOpen = true -->
+              <!-- <div class="dropdown-menu" *ngIf="isStatusDropdownOpen">
+                <div
+                  *ngFor="let status of statusFilters"
+                  class="dropdown-item"
+                  (click)="selectStatus(status.label)"
+                >
+                  {{ status.label }}
+                </div>
+              </div> -->
+            </div>
+          </th>
+          <!-- end -->
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Hàng cha -->
+        <tr style="font-size: 15px">
+          <td class="category-header">
+            <strong>
+              <span>
+                <i class="fa"> </i>
+              </span>
+              <span style="color: green"></span>
+            </strong>
+          </td>
+          <td></td>
+          <td class="text-center"></td>
+         
+          <td class="text-center"></td>
+          <td></td>
+          <td class="text-center">
+            <span class="status"> </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

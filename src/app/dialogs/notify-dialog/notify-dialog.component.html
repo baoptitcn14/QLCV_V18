@@ -1,0 +1,296 @@
+<form [formGroup]="form">
+  <!-- #region begin header dialog -->
+  <div
+    dialogHeader
+    [classDialog]="'p-notify-add-dialog'"
+    class="d-flex justify-content-between align-items-center flex-grow-1"
+  >
+    <span class="p-dialog-title">{{ title }}</span>
+  </div>
+  <!-- #endregion header dialog -->
+
+  <!--thời gian-->
+  <div class="col-md-12 d-flex justify-content-between gap-4">
+    <div class="d-flex align-items-center gap-2">
+      <label>Thời gian</label>
+      <p-calendar
+        formControlName="dateStart"
+        [required]="true"
+        class="flex-grow-1"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        [style]="{ width: '100%' }"
+        [dateFormat]="'dd/mm/yy'"
+        [readonlyInput]="true"
+        variant="filled"
+      />
+      <i class="fa fa-long-arrow-right font-size-22 margin-t-6"></i>
+      <p-calendar
+        formControlName="dateEnd"
+        [required]="true"
+        class="flex-grow-1"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        [style]="{ width: '100%' }"
+        [dateFormat]="'dd/mm/yy'"
+        [readonlyInput]="true"
+        variant="filled"
+      />
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <label>Trạng thái</label>
+      <p-dropdown
+        class="flex-grow-1"
+        optionLabel="label"
+        optionValue="code"
+        [options]="listStatus"
+        [style]="{ width: '100%' }"
+        [scrollHeight]="'200px'"
+        [required]="true"
+        variant="filled"
+        formControlName="status"
+        placeholder="Chọn trạng thái"
+      />
+    </div>
+  </div>
+  <!--end thời gian-->
+
+  <!--nội dung-->
+  <div class="col-md-12 noiDung mt-5">
+    <div class="d-flex flex-column gap-2">
+      <div class="d-flex flex-column gap-2">
+        <label>Tiêu đề</label>
+        <input
+          formControlName="title"
+          pInputText
+          class="flex-grow-1"
+          [required]="true"
+          variant="filled"
+        />
+      </div>
+      <div class="d-flex flex-column mt-3 gap-2">
+        <label>Nội dung thông báo</label>
+        <textarea
+          formControlName="content"
+          pInputTextarea
+          rows="5"
+          cols="30"
+          variant="filled"
+          [autoResize]="true"
+          class="flex-grow-1"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+  <!--end nội dung-->
+
+  <div class="row mt-5 ">
+    <!-- begin người duyệt -->
+    <div class="col-md-4">
+      <div class="d-flex flex-column gap-3">
+        <label>Nguời duyệt</label>
+        <app-user-select
+          [fullName]="duyet?.fullName"
+          [orgName]="duyet?.orgName"
+          [listUserSelected]="[this.form!.get('duyet')!.value]"
+          [listOrg]="this.form!.get('listNguoiBoPhanDuyet')!.value"
+          (onUserSelectEvent)="onUserSelect($event, 'duyet')"
+        ></app-user-select>
+      </div>
+    </div>
+    <!-- end người duyệt -->
+
+    <!--Loại thông báo-->
+    <div class="col-md-4">
+      <div class="d-flex flex-column gap-3">
+        <label>Loại thông báo</label>
+        <p-dropdown
+          class="flex-grow-1"
+          optionLabel="label"
+          optionValue="code"
+          [options]="listNotificationType"
+          [style]="{ width: '100%' }"
+          [scrollHeight]="'200px'"
+          [required]="true"
+          variant="filled"
+          formControlName="notificationType"
+          placeholder="Chọn loại thông báo"
+        />
+      </div>
+    </div>
+    <!--End Loại thông báo-->
+
+    <!--Độ ưu tiên-->
+    <div class="col-md-4">
+      <div class="d-flex flex-column gap-3">
+        <label>Độ ưu tiên</label>
+        <p-dropdown
+          class="flex-grow-1"
+          optionLabel="label"
+          optionValue="code"
+          [options]="listPriority"
+          [style]="{ width: '100%' }"
+          [scrollHeight]="'200px'"
+          [required]="true"
+          variant="filled"
+        />
+      </div>
+    </div>
+    <!--End Độ ưu tiên-->
+  </div>
+
+  <ng-container *ngIf="showTabView">
+    <ng-template [ngTemplateOutlet]="objectAndFile"></ng-template>
+  </ng-container>
+
+  <ng-template #objectAndFile>
+    <p-tabView>
+       <!-- #region tập đính kèm -->
+       <p-tabPanel>
+        <ng-template pTemplate="header">
+          <div class="d-flex align-items-center gap-2">
+            <i class="pi pi-file-plus"></i>
+            <span class="font-bold"> Tập đính kèm </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <m-files formControlName="listFile"></m-files>
+        </ng-template>
+      </p-tabPanel>
+      <!-- #endregion -->
+
+      <!-- #region đối tượng -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <div class="d-flex align-items-center gap-2">
+            <i class="pi pi-users"></i>
+            <span class="font-bold"> Đối tượng liên quan</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <p-table
+            #dt3
+            [value]="listDoiTuongLienQuan.controls"
+            responsiveLayout="stack"
+            [globalFilterFields]="['value.fullName']"
+            [breakpoint]="'960px'"
+            [styleClass]="
+              'p-datatable-sm p-datatable-gridlines p-datatable-striped'
+            "
+            [scrollable]="true"
+            scrollHeight="300px"
+            [tableStyle]="{ 'min-width': '50rem' }"
+          >
+            <ng-template pTemplate="caption">
+              <div
+                class="d-flex align-items-center justify-content-between gap-3"
+              >
+                <p-iconField iconPosition="left" class="ml-auto">
+                  <p-inputIcon>
+                    <i class="pi pi-search"></i>
+                  </p-inputIcon>
+                  <input
+                    #st3
+                    pInputText
+                    type="text"
+                    class="p-inputtext-sm"
+                    (input)="dt3.filterGlobal(st3!.value, 'contains')"
+                    placeholder="Nhập tên đối tượng"
+                  />
+                </p-iconField>
+
+                <p-button
+                  label="Thêm mới"
+                  icon="pi pi-plus"
+                  severity="success"
+                  [size]="'small'"
+                  (onClick)="op.toggle($event)"
+                >
+                  <p-overlayPanel #op>
+                    <app-user-org-select
+                      [isOpen]="true"
+                      [listUserSelected]="listDoiTuongLienQuan.value"
+                      [selectMode]="'MUL_LOCAL'"
+                      [isGetNewListOrg]="false"
+                      [listOrg]="listOrg"
+                      (onUserSelectEvent)="onAddRowDoiTuongLienQuan($event)"
+                      (onOrgSelectEvent)="onSelectOrgEvent($event)"
+                    ></app-user-org-select>
+                  </p-overlayPanel>
+                </p-button>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th class="text-center" [width]="40">#</th>
+                <th>Đối tượng</th>
+                <th>Liên quan</th>
+                <th>Nội dung</th>
+                <th [width]="60"></th>
+              </tr>
+            </ng-template>
+
+            <ng-template
+              pTemplate="body"
+              let-doiTuong
+              let-i="rowIndex"
+              let-columns="columns"
+            >
+              <tr [formGroup]="doiTuong">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td>
+                  <span>{{ doiTuong.get("fullName")?.value }}</span>
+                  <span class="text-primary"
+                    >- {{ doiTuong.get("orgName")?.value }}</span
+                  >
+                </td>
+                <td>
+                  <p-dropdown
+                    [variant]="'filled'"
+                    [options]="doiTuongLienQuanParam.listLoaiDoiTuong"
+                    formControlName="loaiDoiTuong"
+                    optionLabel="name"
+                    optionValue="id"
+                    [appendTo]="'body'"
+                    [styleClass]="'w-100'"
+                  ></p-dropdown>
+                </td>
+                <td>
+                  <input
+                    pInputText
+                    formControlName="noiDung"
+                    variant="filled"
+                    class="p-inputtext-sm w-100"
+                  />
+                </td>
+                <td class="text-center">
+                  <p-button
+                    icon="pi pi-trash"
+                    outlined="true"
+                    severity="danger"
+                    [size]="'small'"
+                    pTooltip="Xóa"
+                    (onClick)="onDeleteDoiTuongLienQuan(i)"
+                  ></p-button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+      </p-tabPanel>
+      <!-- #endregion -->
+    </p-tabView>
+  </ng-template>
+
+  <!-- #region footer dialog -->
+  <dialog-footer
+    dialogFooter
+    [classDialog]="'p-notify-add-dialog'"
+    [isNew]=""
+    [isValid]=""
+    (onCloseEvent)="onHide()"
+    (onSaveEvent)="onSave()"
+  ></dialog-footer>
+  <!-- #endregion -->
+</form>

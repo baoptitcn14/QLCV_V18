@@ -1,0 +1,31 @@
+<div class="d-flex align-items-center gap-2">
+    <label>Thời gian</label>
+    <p-calendar
+      formControlName="dateStart"
+      [required]="true"
+      class="flex-grow-1"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      [style]="{ width: '100%' }"
+      [dateFormat]="'dd/mm/yy'"
+      [readonlyInput]="true"
+      variant="filled"
+    />
+    <i class="fa fa-long-arrow-right font-size-22 margin-t-6"></i>
+    <p-calendar
+      formControlName="dateEnd"
+      [required]="true"
+      class="flex-grow-1"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      [style]="{ width: '100%' }"
+      [dateFormat]="'dd/mm/yy'"
+      [readonlyInput]="true"
+      variant="filled"
+    />
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Hủy" class="p-button-text" ></button>
+    <button pButton type="button" label="Lưu" class="p-button-primary" (click)="onSave()"></button>
+  </ng-template>
+  

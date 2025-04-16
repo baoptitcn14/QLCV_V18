@@ -10,6 +10,9 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CalendarModule } from 'primeng/calendar';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { FormsModule } from '@angular/forms';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { UploadTemplateComponent } from './upload-template/upload-template.component';
+import { FilterGroupDateComponent } from './filter-group-date/filter-group-date.component';
 
 @Component({
   selector: 'app-task-search',
@@ -29,6 +32,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './task-search.component.scss'
 })
 export class TaskSearchComponent {
+  constructor(
+    private dialogService: DialogService
+    ) {}
+
+  ref: DynamicDialogRef | undefined;
 
   frequencyFilters  = [
     { label: 'Tất cả', value: null },
@@ -47,9 +55,10 @@ export class TaskSearchComponent {
   };
 
   statusFilters = [
+    { label: 'Tất cả', value: null },
     { label: 'Đã duyệt', value: 'approved' },
     { label: 'Phê duyệt thay đổi', value: 'pending' },
-    { label: 'Tất cả', value: null }
+
   ];
 
   uploadedFiles: string[] = [
@@ -232,6 +241,49 @@ export class TaskSearchComponent {
 
   refreshList() {
     console.log('Làm mới danh sách công việc');
+  }
+
+  openUploadTemplate(){
+    this.ref = this.dialogService.open(UploadTemplateComponent, {
+      header: 'Upload Template File',
+      width: '30vw',
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      styleClass: 'p-dialog-custom',
+      maximizable: true,
+      data: {
+        isNew: true,
+      },
+    });
+    this.ref.onClose.subscribe((file) => {
+      if (file) {
+        console.log('File is selected', file);
+      }
+    });
+  }
+  openDate(){
+    this.ref = this.dialogService.open(FilterGroupDateComponent, {
+      header: 'Lọc theo thời gian',
+      width: '30vw',
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      styleClass: 'p-dialog-custom',
+      maximizable: true,
+      data: {
+        isNew: true,
+      },
+    });
+    this.ref.onClose.subscribe((data) => {
+      if (data) {
+        console.log('File is selected', data);
+      }
+    });
   }
 
   

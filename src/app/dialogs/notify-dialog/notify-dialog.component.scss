@@ -1,0 +1,24 @@
+:host(::ng-deep) {
+    .p-dialog-footer:not(.m_component) {
+        padding: 0;
+    }
+
+    .p-dialog-content {
+        min-height: 400px;
+        padding: 1rem 1.5rem;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+}
+
+.noiDung {
+    label {
+        width: 125px;
+    }
+}
