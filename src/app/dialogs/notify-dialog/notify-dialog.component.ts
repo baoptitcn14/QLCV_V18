@@ -27,7 +27,6 @@ import { UserSelectComponent } from '../../shared/components/user-select/user-se
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -237,7 +236,7 @@ export class NotifyDialogComponent implements OnInit{
     if (event.state) this.form!.get(formControlName)?.setValue(event.userInfo);
     else this.form!.get(formControlName)?.setValue(null);
   }
-  
+
   get duyet() {
     return this.form!.get('duyet')!.value;
   }

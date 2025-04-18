@@ -1,38 +1,307 @@
 <div class="container-fluid">
-  <div class="row mt-5">
-    <div class="col-md-4">
-      <span class="">Người bàn giao</span>
+     <!-- Action Buttons -->
+     <div class="d-flex justify-content-between mb-3" style="padding-top: 5px">
+        <button
+          pButton
+          type="submit"
+          label="Lưu"
+          icon="pi pi-save"
+          class="p-button-success"
+          size="small"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label=""
+          icon="pi pi-times"
+          class="p-button-secondary"
+          size="small"
+          (click)="onClose()"
+        ></button>
+      </div>
+  <div class="row">
+    <div class="col-md-4 ">
+      <!-- begin người duyệt -->
+      <div class="d-flex flex-column mb-3">
+        <label class="fw-bold" style="font-size: 15px;">Người bàn giao</label>
+        <app-user-select
+          [fullName]="banGiao?.fullName"
+          [orgName]="banGiao?.orgName"
+          [listUserSelected]="[banGiao]"
+          [listOrg]="listOrg"
+          (onUserSelectEvent)="onUserSelect($event, 'banGiao')"
+        ></app-user-select>
+      </div>
+      <!-- end người duyệt -->
+
+      <!-- Công việc xử lý -->
+      <fieldset class="border rounded p-2 mb-3">
+        <legend
+          class="float-none w-auto px-2 text-primary fw-bold mb-1 d-flex align-items-center justify-content-between"
+          style="cursor: pointer"
+          (click)="toggleXuLy()"
+        >
+          <!-- <i [ngClass]="showXuLy ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i> -->
+          <span>Công việc xử lý</span>
+        </legend>
+
+        <div *ngIf="showXuLy">
+          <div class="input-group mb-2">
+            <span class="input-group-text"><i class="pi pi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nhập tìm kiếm công việc..."
+              [(ngModel)]="searchXuLy"
+              (ngModelChange)="filterXuLyJobs()"
+            />
+            <button class="btn btn-outline-secondary" (click)="refreshXuLy()">
+              <i class="pi pi-refresh"></i>
+            </button>
+          </div>
+
+          <div
+            *ngIf="xuLyJobs.length === 0"
+            class="text-primary text-center small"
+          >
+            Chưa có công việc nào
+          </div>
+
+          <ul class="list-group" *ngIf="xuLyJobs.length > 0">
+            <li class="list-group-item p-1" *ngFor="let job of xuLyJobs">
+              {{ job.title }}
+            </li>
+          </ul>
+        </div>
+      </fieldset>
+
+      <!-- Công việc định kỳ -->
+      <fieldset class="border rounded p-2">
+        <legend
+          class="float-none w-auto px-2 text-primary fw-bold mb-1 d-flex align-items-center justify-content-between"
+          style="cursor: pointer"
+          (click)="toggleDinhKy()"
+        >
+          <!-- <i [ngClass]="showDinhKy ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i> -->
+          <span>Công việc định kỳ</span>
+        </legend>
+
+        <div *ngIf="showDinhKy">
+          <div class="input-group mb-2">
+            <span class="input-group-text"><i class="pi pi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nhập tìm kiếm công việc..."
+              [(ngModel)]="searchDinhKy"
+              (ngModelChange)="filterDinhKyJobs()"
+            />
+            <button class="btn btn-outline-secondary" (click)="refreshDinhKy()">
+              <i class="pi pi-refresh"></i>
+            </button>
+          </div>
+
+          <div
+            *ngIf="dinhKyJobs.length === 0"
+            class="text-primary text-center small"
+          >
+            Chưa có công việc nào
+          </div>
+
+          <ul class="list-group" *ngIf="dinhKyJobs.length > 0">
+            <li class="list-group-item p-1" *ngFor="let job of dinhKyJobs">
+              {{ job.title }}
+            </li>
+          </ul>
+        </div>
+      </fieldset>
     </div>
+
     <div class="col-md-8">
+     
       <!-- <p-button 
         label="Lưu" 
         severity="success"
         icon="pi pi-save" 
         iconPos="right" >
       </p-button> -->
-      <div class="d-flex flex-column gap-2">
+      <form [formGroup]="form">
         <div class="d-flex flex-column gap-2">
-          <label>Tiêu đề</label>
-          <input
-            formControlName="title"
-            pInputText
-            class="flex-grow-1"
-            [required]="true"
-            variant="filled"
-          />
+          <div class="d-flex flex-column gap-2">
+            <label class="fw-bold" style="font-size: 15px;">Tiêu đề</label>
+            <input
+              formControlName="title"
+              pInputText
+              class="flex-grow-1"
+              [required]="true"
+              variant="filled"
+            />
+          </div>
+          <div class="d-flex flex-column mt-3 gap-2">
+            <label class="fw-bold" style="font-size: 15px;">Nội dung bàn giao</label>
+            <textarea
+              formControlName="content"
+              pInputTextarea
+              rows="5"
+              cols="30"
+              variant="filled"
+              class="flex-grow-1"
+            ></textarea>
+          </div>
+
+          <!-- PHẦN THÔNG TIN NGƯỜI DUYỆT VÀ BỘ PHẬN TIẾP NHẬN -->
+          <div class="info-section mt-3">
+            <div class="row">
+              <div class="col">
+                <div class="d-flex flex-column mb-3">
+                  <label class="fw-bold" style="font-size: 15px;">Người duyệt</label>
+                  <app-user-select
+                    [fullName]="nguoiDuyet?.fullName"
+                    [orgName]="nguoiDuyet?.orgName"
+                    [listUserSelected]="[nguoiDuyet]"
+                    [listOrg]="listOrg"
+                    (onUserSelectEvent)="onUserSelect($event, 'nguoiDuyet')"
+                  ></app-user-select>
+                </div>
+              </div>
+              <div class="col">
+                <div class="d-flex flex-column mb-3">
+                  <label class="fw-bold" style="font-size: 15px;">Bộ phận tiếp nhận</label>
+                  <app-user-select
+                    [fullName]="boPhanTiepNhan?.fullName"
+                    [orgName]="boPhanTiepNhan?.orgName"
+                    [listUserSelected]="[boPhanTiepNhan]"
+                    [listOrg]="listOrg"
+                    (onUserSelectEvent)="onUserSelect($event, 'boPhanTiepNhan')"
+                  ></app-user-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END PHẦN THÔNG TIN NGƯỜI DUYỆT VÀ BỘ PHẬN TIẾP NHẬN -->
+
+          <!-- DANH SÁCH VIỆC ĐÃ TẠO -->
+          <fieldset class="border rounded mt-4">
+            <table class="table table-bordered text-center align-middle mb-0" style="font-size: 15px;">
+              <thead class="">
+                <!-- Dòng đầu tiên: Tiêu đề + Người xử lý/duyệt/giám sát -->
+                <tr
+                  style="cursor: pointer"
+                  (click)="toggleViecs()"
+                  class="bg-info-subtle"
+                >
+                  <th colspan="1" class="text-start fw-bold" style="width: 50%">
+                    <i
+                      class="pi"
+                      [ngClass]="
+                        showViecs ? 'pi-chevron-down' : 'pi-chevron-right'
+                      "
+                    ></i>
+                    Danh sách việc đã tạo
+                  </th>
+                  <th>Người xử lý</th>
+                  <th>Người duyệt</th>
+                  <th>Người giám sát</th>
+                  <th style="width: 40px"></th>
+                </tr>
+
+                <!-- Dòng thứ 2: tên cột thực tế -->
+                <tr *ngIf="showViecs">
+                  <th style="width: 50%">Tên công việc</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <!-- Dữ liệu -->
+              <tbody *ngIf="showViecs">
+                <tr *ngIf="viecDaTao.length === 0">
+                  <td colspan="5" class="text-primary text-center">
+                    Chưa có công việc nào.
+                  </td>
+                </tr>
+                <tr *ngFor="let job of viecDaTao; let i = index">
+                  <td>{{ job.ten }}</td>
+                  <td>{{ job.nguoiXuLy }}</td>
+                  <td>{{ job.nguoiDuyet }}</td>
+                  <td>{{ job.nguoiGiamSat }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-danger" (click)="xoaViec(i)">
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+
+          <!-- DANH SÁCH VIỆC ĐỊNH KỲ -->
+          <fieldset class="border rounded mt-4">
+            <table class="table table-bordered text-center align-middle mb-0" style="font-size: 15px;">
+              <thead class="">
+                <tr
+                  style="cursor: pointer"
+                  (click)="toggleViecDinhKy()"
+                  class="bg-info-subtle"
+                >
+                  <th colspan="1" class="text-start fw-bold" style="width: 50%">
+                    <i
+                      class="pi"
+                      [ngClass]="
+                        showViecDinhKy ? 'pi-chevron-down' : 'pi-chevron-right'
+                      "
+                    ></i>
+                    Danh sách việc định kỳ đã tạo
+                  </th>
+                  <th>Người xử lý</th>
+                  <th>Người duyệt</th>
+                  <th>Người giám sát</th>
+                  <th style="width: 40px"></th>
+                </tr>
+                <tr *ngIf="showViecDinhKy">
+                  <th style="width: 50%">Tên công việc</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody *ngIf="showViecDinhKy">
+                <tr *ngIf="viecDinhKy.length === 0">
+                  <td colspan="5" class="text-primary text-center">
+                    Chưa có công việc nào.
+                  </td>
+                </tr>
+                <tr *ngFor="let job of viecDinhKy; let i = index">
+                  <td>{{ job.ten }}</td>
+                  <td>{{ job.nguoiXuLy }}</td>
+                  <td>{{ job.nguoiDuyet }}</td>
+                  <td>{{ job.nguoiGiamSat }}</td>
+                  <td>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="xoaViecDinhKy(i)"
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <!-- <div class="d-flex justify-content-start">
+            <button
+              pButton
+              type="submit"
+              label="Lưu"
+              icon="pi pi-save"
+              class="p-button-success"
+            ></button>
+          </div> -->
         </div>
-        <div class="d-flex flex-column mt-3 gap-2">
-          <label>Nội dung bàn giao</label>
-          <textarea
-            formControlName="content"
-            pInputTextarea
-            rows="5"
-            cols="30"
-            variant="filled"
-            class="flex-grow-1"
-          ></textarea>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>

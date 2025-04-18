@@ -1,0 +1,5 @@
+/* Ví dụ trong component.scss */
+:host ::ng-deep .col-md-4,
+:host ::ng-deep .col-md-8 {
+  overflow: visible;
+}
